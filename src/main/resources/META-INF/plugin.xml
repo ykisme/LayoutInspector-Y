@@ -60,4 +60,16 @@
     <extensions defaultExtensionNs="com.android">
         <captureType implementation="com.android.tools.idea.editors.layoutInspector.LayoutInspectorCaptureType"/>
     </extensions>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService
+                            serviceImplementation="yk.plugin.layoutinspector.config.MyPluginSettings"/>
+        <!-- IMPORTANT: 注册全局配置项入口 -->
+        <applicationConfigurable
+                id="MyPluginConfig"
+                groupId="tools"
+                instance="yk.plugin.layoutinspector.config.MyPluginConfigurable"/>  <!-- 图标配置 -->
+    </extensions>
+    <!-- IMPORTANT: 声明 Kotlin 依赖 -->
+    <depends>org.jetbrains.kotlin</depends>
 </idea-plugin>

@@ -69,3 +69,6 @@ tasks {
         enabled = false
     }
 }
+
+dependencies {
+}
