@@ -65,9 +65,10 @@
         <applicationService
                             serviceImplementation="yk.plugin.layoutinspector.config.MyPluginSettings"/>
         <!-- IMPORTANT: 注册全局配置项入口 -->
+<!--        todo 方便测试,后续放到tools里面   -->
+<!--                groupId="tools"-->
         <applicationConfigurable
                 id="MyPluginConfig"
-                groupId="tools"
                 instance="yk.plugin.layoutinspector.config.MyPluginConfigurable"/>  <!-- 图标配置 -->
     </extensions>
     <!-- IMPORTANT: 声明 Kotlin 依赖 -->
