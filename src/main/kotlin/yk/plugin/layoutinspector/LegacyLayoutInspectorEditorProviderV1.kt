@@ -17,9 +17,9 @@ import com.intellij.openapi.vfs.VirtualFile
  * @author pingfangx
  * @date 2022/6/30
  */
-class LegacyLayoutInspectorEditorProvider : FileEditorProvider, DumbAware {
+class LegacyLayoutInspectorEditorProviderV1 : FileEditorProvider, DumbAware {
     override fun accept(project: Project, file: VirtualFile): Boolean {
-        return file.extension.orEmpty().equals(LegacyLayoutInspectorFileType.EXT_LAYOUT_INSPECTOR, true)
+        return file.extension.orEmpty().equals(LegacyLayoutInspectorFileTypeV1.EXT_LAYOUT_INSPECTOR, true)
     }
 
     override fun createEditor(project: Project, file: VirtualFile): FileEditor {

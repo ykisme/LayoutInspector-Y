@@ -4,6 +4,8 @@ import com.intellij.openapi.components.PersistentStateComponent
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.components.service
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 // 定义状态数据类
 data class PluginState(
@@ -37,6 +39,8 @@ enum class PrefVersion(private val type: Int) {
 )
 class MyPluginSettings : PersistentStateComponent<PluginState> {
     private var state = PluginState()
+    private val _PrefVersionState = MutableStateFlow(PrefVersion.ASK)
+    val prefVersion = _PrefVersionState.asStateFlow()
 
     companion object {
         @JvmStatic
@@ -47,5 +51,6 @@ class MyPluginSettings : PersistentStateComponent<PluginState> {
 
     override fun loadState(state: PluginState) {
         this.state = state
+        _PrefVersionState.value = state.prefVersion
     }
 }

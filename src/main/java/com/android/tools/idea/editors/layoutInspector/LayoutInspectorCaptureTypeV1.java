@@ -25,24 +25,26 @@ import com.intellij.openapi.vfs.VirtualFile;
 import icons.StudioIcons;
 import org.jetbrains.annotations.NotNull;
 
-public class LayoutInspectorCaptureType extends FileCaptureType {
-  protected LayoutInspectorCaptureType() {
-    super("Layout Inspector Snapshot", StudioIcons.Shell.Menu.LAYOUT_INSPECTOR, LayoutInspectorFileType.DOT_EXT_LAYOUT_INSPECTOR);
-  }
+public class LayoutInspectorCaptureTypeV1 extends FileCaptureType {
+    public static final String DOT_EXT_LAYOUT_INSPECTOR = ".li";
 
-  @Override
-  public boolean accept(@NotNull VirtualFile file) {
-    return !StudioFlags.DYNAMIC_LAYOUT_INSPECTOR_ENABLE_SNAPSHOTS.get() || !LayoutInspectorSettingsKt.getEnableLiveLayoutInspector();
-  }
+    protected LayoutInspectorCaptureTypeV1() {
+        super("Layout Inspector Snapshot(V1)", StudioIcons.Shell.Menu.LAYOUT_INSPECTOR, DOT_EXT_LAYOUT_INSPECTOR);
+    }
 
-  @NotNull
-  @Override
-  public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
-    return new LayoutInspectorEditor(project, file);
-  }
+    @Override
+    public boolean accept(@NotNull VirtualFile file) {
+        return file.getName().endsWith(DOT_EXT_LAYOUT_INSPECTOR);
+    }
 
-  @Override
-  public ProfilerCaptureType getCaptureType() {
-    return ProfilerCaptureType.HIERARCHY_VIEW;
-  }
+    @NotNull
+    @Override
+    public FileEditor createEditor(@NotNull Project project, @NotNull VirtualFile file) {
+        return new LayoutInspectorEditor(project, file);
+    }
+
+    @Override
+    public ProfilerCaptureType getCaptureType() {
+        return ProfilerCaptureType.HIERARCHY_VIEW;
+    }
 }

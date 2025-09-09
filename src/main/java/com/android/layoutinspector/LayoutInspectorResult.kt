@@ -20,4 +20,8 @@ package com.android.layoutinspector
  * Success: data is not null, and error is the empty string
  * Error: data is null, and error a non empty error message
  */
-class LayoutInspectorResult(val data: ByteArray?, val error: String)
+class LayoutInspectorResult(
+    val data: ByteArray?,
+    val error: String,
+    val options: LayoutInspectorCaptureOptions,
+)

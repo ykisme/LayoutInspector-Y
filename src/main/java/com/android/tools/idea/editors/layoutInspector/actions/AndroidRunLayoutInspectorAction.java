@@ -30,51 +30,50 @@ import org.jetbrains.android.actions.AndroidProcessChooserDialog;
 import org.jetbrains.android.util.AndroidBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yk.plugin.layoutinspector.config.Constant;
 
 public class AndroidRunLayoutInspectorAction extends AnAction {
-  public AndroidRunLayoutInspectorAction() {
-    super(AndroidBundle.message("android.ddms.actions.layoutinspector.title.legacy"),
-          AndroidBundle.message("android.ddms.actions.layoutinspector.description"),
-          StudioIcons.Shell.Menu.LAYOUT_INSPECTOR);
-  }
-
-  @Override
-  public void update(@NotNull AnActionEvent e) {
-    e.getPresentation().setVisible(!LayoutInspectorSettingsKt.getEnableLiveLayoutInspector());
-    if (isDebuggerPaused(e.getProject())) {
-      e.getPresentation().setDescription(AndroidBundle.message("android.ddms.actions.layoutinspector.description.disabled"));
-      e.getPresentation().setEnabled(false);
-    }
-    else {
-      e.getPresentation().setDescription(AndroidBundle.message("android.ddms.actions.layoutinspector.description"));
-      e.getPresentation().setEnabled(true);
-    }
-  }
-
-  @Override
-  public void actionPerformed(AnActionEvent e) {
-    Project project = e.getProject();
-    assert project != null;
-
-    AndroidProcessChooserDialog dialog = new AndroidProcessChooserDialog(project, false);
-    dialog.show();
-    if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
-      Client client = dialog.getClient();
-      if (client != null) {
-        project.getService(AndroidLayoutInspectorService.class).getTask(project, client).queue();
-      }
-      else {
-        Logger.getInstance(AndroidRunLayoutInspectorAction.class).warn("Not launching layout inspector - no client selected");
-      }
-    }
-  }
-
-  public static boolean isDebuggerPaused(@Nullable Project project) {
-    if (project == null) {
-      return false;
+    public AndroidRunLayoutInspectorAction() {
+        super(Constant.ACTION_LAYOUT_INSPECTOR_TITLE,
+                Constant.ACTION_LAYOUT_INSPECTOR_DES,
+                StudioIcons.Shell.Menu.LAYOUT_INSPECTOR);
     }
 
-    XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
-    return session != null && !session.isStopped() && session.isPaused();
-  }
+    @Override
+    public void update(@NotNull AnActionEvent e) {
+        e.getPresentation().setVisible(!LayoutInspectorSettingsKt.getEnableLiveLayoutInspector());
+        if (isDebuggerPaused(e.getProject())) {
+            e.getPresentation().setDescription(AndroidBundle.message("android.ddms.actions.layoutinspector.description.disabled"));
+            e.getPresentation().setEnabled(false);
+        } else {
+            e.getPresentation().setDescription(AndroidBundle.message("android.ddms.actions.layoutinspector.description"));
+            e.getPresentation().setEnabled(true);
+        }
+    }
+
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getProject();
+        assert project != null;
+
+        AndroidProcessChooserDialog dialog = new AndroidProcessChooserDialog(project, false);
+        dialog.show();
+        if (dialog.getExitCode() == DialogWrapper.OK_EXIT_CODE) {
+            Client client = dialog.getClient();
+            if (client != null) {
+                project.getService(AndroidLayoutInspectorService.class).getTask(project, client).queue();
+            } else {
+                Logger.getInstance(AndroidRunLayoutInspectorAction.class).warn("Not launching layout inspector - no client selected");
+            }
+        }
+    }
+
+    public static boolean isDebuggerPaused(@Nullable Project project) {
+        if (project == null) {
+            return false;
+        }
+
+        XDebugSession session = XDebuggerManager.getInstance(project).getCurrentSession();
+        return session != null && !session.isStopped() && session.isPaused();
+    }
 }

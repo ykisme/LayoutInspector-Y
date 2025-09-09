@@ -1,7 +1,11 @@
 package yk.plugin.layoutinspector
 
 import com.android.tools.idea.editors.layoutInspector.actions.AndroidRunLayoutInspectorAction
+import com.android.tools.idea.gradle.project.sync.ModelCache
 import com.intellij.openapi.actionSystem.AnActionEvent
+import yk.plugin.layoutinspector.config.MyPluginSettings
+import yk.plugin.layoutinspector.config.PrefVersion
+import yk.plugin.layoutinspector.res.Icons
 
 /**
  * 旧版
@@ -19,5 +23,12 @@ class LegacyLayoutInspectorAction : AndroidRunLayoutInspectorAction() {
         super.update(e)
         // 忽略父类设置，总是可见
         e.presentation.isVisible = true
+        val version = MyPluginSettings.getInstance().prefVersion.value
+        e.presentation.icon = when(version) {
+            PrefVersion.V1 -> Icons.VERSION_V1
+            PrefVersion.V2 -> Icons.VERSION_V2
+            PrefVersion.V1V2 -> Icons.VERSION_V1V2
+            else -> Icons.VERSION_ASK
+        }
     }
 }

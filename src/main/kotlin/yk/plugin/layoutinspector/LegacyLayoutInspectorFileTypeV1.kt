@@ -2,6 +2,7 @@ package yk.plugin.layoutinspector
 
 import com.intellij.openapi.fileTypes.FileType
 import icons.StudioIcons
+import yk.plugin.layoutinspector.res.Icons
 import javax.swing.Icon
 
 /**
@@ -14,7 +15,7 @@ import javax.swing.Icon
  * @author pingfangx
  * @date 2022/6/30
  */
-class LegacyLayoutInspectorFileType private constructor() : FileType {
+class LegacyLayoutInspectorFileTypeV1 private constructor() : FileType {
     override fun getName(): String {
         return "Legacy Layout Inspector"
     }
@@ -28,7 +29,7 @@ class LegacyLayoutInspectorFileType private constructor() : FileType {
     }
 
     override fun getIcon(): Icon {
-        return StudioIcons.Shell.Menu.LAYOUT_INSPECTOR
+        return Icons.VERSION_V1!!
     }
 
     override fun isBinary(): Boolean {
@@ -41,7 +42,7 @@ class LegacyLayoutInspectorFileType private constructor() : FileType {
 
     companion object {
         @JvmField
-        val INSTANCE = LegacyLayoutInspectorFileType()
+        val INSTANCE = LegacyLayoutInspectorFileTypeV1()
         const val EXT_LAYOUT_INSPECTOR = "li"
         const val DOT_EXT_LAYOUT_INSPECTOR = ".li"
     }

@@ -16,6 +16,7 @@
 package com.android.tools.idea.editors.layoutInspector;
 
 import com.android.tools.analytics.UsageTrackerUtils;
+import com.android.tools.idea.profiling.capture.CaptureType;
 import com.google.common.annotations.VisibleForTesting;
 import com.android.ddmlib.Client;
 import com.android.layoutinspector.LayoutInspectorBridge;
@@ -24,10 +25,8 @@ import com.android.layoutinspector.LayoutInspectorResult;
 import com.android.layoutinspector.ProtocolVersion;
 import com.android.layoutinspector.model.ClientWindow;
 import com.android.tools.analytics.UsageTracker;
-import com.android.tools.idea.flagslegacy.StudioFlags;
 import com.android.tools.idea.profiling.capture.Capture;
 import com.android.tools.idea.profiling.capture.CaptureService;
-import com.android.tools.idea.stats.AndroidStudioUsageTracker;
 import com.google.wireless.android.sdk.stats.AndroidStudioEvent;
 import com.google.wireless.android.sdk.stats.LayoutInspectorEvent;
 import com.intellij.openapi.fileEditor.FileEditor;
@@ -41,97 +40,109 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
+import yk.plugin.layoutinspector.config.MyPluginSettings;
+import yk.plugin.layoutinspector.config.PrefVersion;
 
 import java.io.IOException;
 import java.util.List;
 
 public class LayoutInspectorCaptureTask extends Task.Backgroundable {
-  private static final String TITLE = "Capture View Hierarchy";
+    private static final String TITLE = "Capture View Hierarchy";
 
-  @NotNull private final Client myClient;
-  @NotNull private final ClientWindow myWindow;
+    @NotNull
+    private final Client myClient;
+    @NotNull
+    private final ClientWindow myWindow;
 
-  private String myError;
-  private byte[] myData;
+    private String myError;
+    private byte[] myData;
+    private LayoutInspectorResult myResult;
 
-  public LayoutInspectorCaptureTask(@NotNull Project project, @NotNull Client client, @NotNull ClientWindow window) {
-    super(project, "Capturing View Hierarchy");
-    myClient = client;
-    myWindow = window;
-  }
-
-  @Override
-  public void run(@NotNull ProgressIndicator indicator) {
-    LayoutInspectorCaptureOptions options = new LayoutInspectorCaptureOptions();
-    options.setTitle(myWindow.getDisplayName());
-    ProtocolVersion version =
-      determineProtocolVersion(myClient.getDevice().getVersion().getApiLevel(), StudioFlags.LAYOUT_INSPECTOR_V2_PROTOCOL_ENABLED.get());
-    options.setVersion(
-      version);
-
-    // Capture view hierarchy
-    indicator.setText("Capturing View Hierarchy");
-    indicator.setIndeterminate(false);
-
-    long startTimeMs = System.currentTimeMillis();
-    LayoutInspectorResult result = LayoutInspectorBridge.captureView(myWindow, options);
-    long captureDurationMs = System.currentTimeMillis() - startTimeMs;
-    UsageTracker.log(UsageTrackerUtils.withProjectId(
-      AndroidStudioEvent.newBuilder().setKind(AndroidStudioEvent.EventKind.LAYOUT_INSPECTOR_EVENT)
-        .setDeviceInfo(UsageTrackerUtils.deviceToDeviceInfo(myClient.getDevice()))
-        .setLayoutInspectorEvent(LayoutInspectorEvent.newBuilder()
-          .setType(LayoutInspectorEvent.LayoutInspectorEventType.CAPTURE)
-          .setDurationInMs(captureDurationMs)
-          .setDataSize(result.getError().isEmpty() ? result.getData().length : 0)),
-      myProject));
-
-    UsageTracker.log(UsageTrackerUtils.withProjectId(
-      AndroidStudioEvent.newBuilder().setKind(AndroidStudioEvent.EventKind.LAYOUT_INSPECTOR_EVENT)
-        .setDeviceInfo(UsageTrackerUtils.deviceToDeviceInfo(myClient.getDevice()))
-        .setLayoutInspectorEvent(LayoutInspectorEvent.newBuilder()
-          .setType(LayoutInspectorEvent.LayoutInspectorEventType.CAPTURE)
-          .setDurationInMs(captureDurationMs)
-          .setVersion(version.ordinal() + 1)
-          .setDataSize(result.getError().isEmpty()
-                       ? result.getData().length
-                       : 0)),
-        myProject));
-    
-    if (!result.getError().isEmpty()) {
-      myError = result.getError();
-      return;
+    public LayoutInspectorCaptureTask(@NotNull Project project, @NotNull Client client, @NotNull ClientWindow window) {
+        super(project, "Capturing View Hierarchy");
+        myClient = client;
+        myWindow = window;
     }
 
-    myData = result.getData();
-  }
+    @Override
+    public void run(@NotNull ProgressIndicator indicator) {
+        LayoutInspectorCaptureOptions options = new LayoutInspectorCaptureOptions();
+        options.setTitle(myWindow.getDisplayName());
+        boolean v2Enable = MyPluginSettings.getInstance().getState().getPrefVersion() == PrefVersion.V2;
+        ProtocolVersion version =
+                determineProtocolVersion(myClient.getDevice().getVersion().getApiLevel(), v2Enable);
+        options.setVersion(
+                version);
 
-  @VisibleForTesting
-  static ProtocolVersion determineProtocolVersion(int apiVersion, boolean v2Enabled) {
-    return apiVersion >= LayoutInspectorBridge.getV2_MIN_API() && v2Enabled ? ProtocolVersion.Version2 : ProtocolVersion.Version1;
-  }
+        // Capture view hierarchy
+        indicator.setText("Capturing View Hierarchy");
+        indicator.setIndeterminate(false);
 
-  @Override
-  public void onSuccess() {
-    if (myError != null) {
-      Messages.showErrorDialog("Error obtaining view hierarchy: " + StringUtil.notNullize(myError), TITLE);
-      return;
+        long startTimeMs = System.currentTimeMillis();
+        LayoutInspectorResult result = LayoutInspectorBridge.captureView(myWindow, options);
+        long captureDurationMs = System.currentTimeMillis() - startTimeMs;
+        UsageTracker.log(UsageTrackerUtils.withProjectId(
+                AndroidStudioEvent.newBuilder().setKind(AndroidStudioEvent.EventKind.LAYOUT_INSPECTOR_EVENT)
+                        .setDeviceInfo(UsageTrackerUtils.deviceToDeviceInfo(myClient.getDevice()))
+                        .setLayoutInspectorEvent(LayoutInspectorEvent.newBuilder()
+                                .setType(LayoutInspectorEvent.LayoutInspectorEventType.CAPTURE)
+                                .setDurationInMs(captureDurationMs)
+                                .setDataSize(result.getError().isEmpty() ? result.getData().length : 0)),
+                myProject));
+
+        UsageTracker.log(UsageTrackerUtils.withProjectId(
+                AndroidStudioEvent.newBuilder().setKind(AndroidStudioEvent.EventKind.LAYOUT_INSPECTOR_EVENT)
+                        .setDeviceInfo(UsageTrackerUtils.deviceToDeviceInfo(myClient.getDevice()))
+                        .setLayoutInspectorEvent(LayoutInspectorEvent.newBuilder()
+                                .setType(LayoutInspectorEvent.LayoutInspectorEventType.CAPTURE)
+                                .setDurationInMs(captureDurationMs)
+                                .setVersion(version.ordinal() + 1)
+                                .setDataSize(result.getError().isEmpty()
+                                        ? result.getData().length
+                                        : 0)),
+                myProject));
+
+        if (!result.getError().isEmpty()) {
+            myError = result.getError();
+            return;
+        }
+
+        myData = result.getData();
+        myResult = result;
     }
 
-    CaptureService service = CaptureService.getInstance(myProject);
-    try {
-      Capture capture = service.createCapture(LayoutInspectorCaptureType.class, myData, service.getSuggestedName(myClient));
-      final VirtualFile file = capture.getFile();
-      file.refresh(true, false, () -> UIUtil.invokeLaterIfNeeded(() -> {
-        OpenFileDescriptor descriptor = new OpenFileDescriptor(myProject, file);
-        List<FileEditor> editors = FileEditorManager.getInstance(myProject).openEditor(descriptor, true);
+    @VisibleForTesting
+    static ProtocolVersion determineProtocolVersion(int apiVersion, boolean v2Enabled) {
+        return apiVersion >= LayoutInspectorBridge.getV2_MIN_API() && v2Enabled ? ProtocolVersion.Version2 : ProtocolVersion.Version1;
+    }
 
-        editors.stream().filter(e -> e instanceof LayoutInspectorEditor).findFirst().ifPresent((editor) -> {
-          ((LayoutInspectorEditor)editor).setSources(myClient, myWindow);
-        });
-      }));
+    @Override
+    public void onSuccess() {
+        if (myError != null) {
+            Messages.showErrorDialog("Error obtaining view hierarchy: " + StringUtil.notNullize(myError), TITLE);
+            return;
+        }
+
+        CaptureService service = CaptureService.getInstance(myProject);
+        try {
+            Class<? extends CaptureType> captureTypeClass;
+            if (myResult.getOptions().getVersion() == ProtocolVersion.Version1) {
+                captureTypeClass = LayoutInspectorCaptureTypeV1.class;
+            } else {
+                captureTypeClass = LayoutInspectorCaptureTypeV2.class;
+            }
+            Capture capture = service.createCapture(captureTypeClass, myData, service.getSuggestedName(myClient));
+            final VirtualFile file = capture.getFile();
+            file.refresh(true, false, () -> UIUtil.invokeLaterIfNeeded(() -> {
+                OpenFileDescriptor descriptor = new OpenFileDescriptor(myProject, file);
+                List<FileEditor> editors = FileEditorManager.getInstance(myProject).openEditor(descriptor, true);
+
+                editors.stream().filter(e -> e instanceof LayoutInspectorEditor).findFirst().ifPresent((editor) -> {
+                    ((LayoutInspectorEditor) editor).setSources(myClient, myWindow);
+                });
+            }));
+        } catch (IOException e) {
+            Messages.showErrorDialog("Error creating hierarchy view capture: " + e, TITLE);
+        }
     }
-    catch (IOException e) {
-      Messages.showErrorDialog("Error creating hierarchy view capture: " + e, TITLE);
-    }
-  }
 }
