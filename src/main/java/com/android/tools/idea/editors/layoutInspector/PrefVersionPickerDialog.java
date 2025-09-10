@@ -48,6 +48,7 @@ public class PrefVersionPickerDialog extends DialogWrapper {
         myPanel = new JPanel();
         myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS)); // 垂直排列
         JBRadioButton v1Button = new JBRadioButton(Constant.V1_BTN_DES);
+        v1Button.setAlignmentX(Component.LEFT_ALIGNMENT);
         myPanel.add(v1Button);
         myPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 添加间距
         v1Button.addActionListener(e -> {
@@ -57,6 +58,7 @@ public class PrefVersionPickerDialog extends DialogWrapper {
             }
         });
         JBRadioButton v2Button = new JBRadioButton(Constant.V2_BTN_DES);
+        v2Button.setAlignmentX(Component.LEFT_ALIGNMENT);
         v2Button.addChangeListener(e -> {
             if (v2Button.isSelected()) {
                 mPrefVersion = PrefVersion.V2;
@@ -64,6 +66,10 @@ public class PrefVersionPickerDialog extends DialogWrapper {
             }
         });
         myPanel.add(v2Button);
+        myPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 添加间距
+        JLabel textField = new JLabel(Constant.PREF_SETTING_INFO);
+        textField.setAlignmentX(Component.LEFT_ALIGNMENT);
+        myPanel.add(textField);
         init();
     }
 

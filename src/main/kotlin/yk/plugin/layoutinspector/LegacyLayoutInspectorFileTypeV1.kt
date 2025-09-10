@@ -17,11 +17,11 @@ import javax.swing.Icon
  */
 class LegacyLayoutInspectorFileTypeV1 private constructor() : FileType {
     override fun getName(): String {
-        return "Legacy Layout Inspector"
+        return "Layout Inspector(V1)"
     }
 
     override fun getDescription(): String {
-        return "Legacy Layout Inspector Snapshot"
+        return "Legacy Layout Inspector Snapshot(V1)"
     }
 
     override fun getDefaultExtension(): String {
@@ -41,9 +41,9 @@ class LegacyLayoutInspectorFileTypeV1 private constructor() : FileType {
     }
 
     companion object {
+        // 插件需要,反射调用
         @JvmField
         val INSTANCE = LegacyLayoutInspectorFileTypeV1()
         const val EXT_LAYOUT_INSPECTOR = "li"
-        const val DOT_EXT_LAYOUT_INSPECTOR = ".li"
     }
 }

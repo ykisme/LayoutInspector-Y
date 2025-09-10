@@ -118,7 +118,7 @@ object ViewNodeParser {
 
         if (data.length > delimIndex + 1) {
             loadProperties(node, data.substring(delimIndex + 1), skippedProperties)
-            node.id = node.getProperty("mID", "id")!!.value
+            node.id = node.getProperty("mID", "id")?.value
         }
         node.displayInfo = DisplayInfoFactory.createDisplayInfoFromNode(node)
         parent?.let {

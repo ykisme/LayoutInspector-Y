@@ -15,4 +15,5 @@ object Constant {
     const val TITLE_SELECT_VERSION = "Select version"
     const val V1_BTN_DES = "V1 (slow, more information)"
     const val V2_BTN_DES = "V2 (faster, less information)"
+    const val PREF_SETTING_INFO = "You can configure to ignore prompts in Settings. Search for '${SETTINGS_NAME}'."
 }
