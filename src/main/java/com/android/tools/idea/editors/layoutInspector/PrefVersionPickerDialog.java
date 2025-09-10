@@ -15,43 +15,55 @@
  */
 package com.android.tools.idea.editors.layoutInspector;
 
-import com.android.ddmlib.Client;
-import com.android.layoutinspector.model.ClientWindow;
+import com.android.tools.r8.graph.V2;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.ui.ComboBox;
 import com.intellij.openapi.ui.DialogWrapper;
-import com.intellij.ui.CollectionComboBoxModel;
-import com.intellij.ui.SimpleListCellRenderer;
-import org.jetbrains.android.util.AndroidBundle;
+import com.intellij.ui.components.JBRadioButton;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yk.plugin.layoutinspector.config.Constant;
 import yk.plugin.layoutinspector.config.PrefVersion;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class WindowPickerDialog extends DialogWrapper {
-    @NonNls private static final String WINDOW_PICKER_DIMENSIONS_KEY = "LayoutInspector.WindowPicker.Options.Dimensions";
+public class PrefVersionPickerDialog extends DialogWrapper {
+
+
+    @NonNls
+    private static final String WINDOW_PICKER_DIMENSIONS_KEY = "LayoutInspector.WindowPicker.Options.Dimensions";
 
     private final JPanel myPanel;
-    private final JComboBox myWindowsCombo;
-
-    @Nullable ClientWindow mySelectedWindow;
     @Nullable PrefVersion mPrefVersion;
 
-    public WindowPickerDialog(@NotNull Project project, @NotNull final Client client, @NotNull List<ClientWindow> windows) {
+    public PrefVersionPickerDialog(@NotNull Project project) {
         super(project, true);
-        setTitle(AndroidBundle.message("android.ddms.actions.layoutinspector.windowpicker"));
+        setTitle(Constant.TITLE_SELECT_VERSION);
 
-        myPanel = new JPanel(new BorderLayout());
-
-        myWindowsCombo = new ComboBox(new CollectionComboBoxModel<ClientWindow>(windows));
-        myWindowsCombo.setRenderer(SimpleListCellRenderer.create("", ClientWindow::getDisplayName));
-        myWindowsCombo.setSelectedIndex(0);
-        myPanel.add(myWindowsCombo, BorderLayout.CENTER);
-
+        myPanel = new JPanel();
+        myPanel.setLayout(new BoxLayout(myPanel, BoxLayout.Y_AXIS)); // 垂直排列
+        JBRadioButton v1Button = new JBRadioButton(Constant.V1_BTN_DES);
+        myPanel.add(v1Button);
+        myPanel.add(Box.createRigidArea(new Dimension(0, 10))); // 添加间距
+        v1Button.addActionListener(e -> {
+            if (v1Button.isSelected()) {
+                mPrefVersion = PrefVersion.V1;
+                performOKAction();
+            }
+        });
+        JBRadioButton v2Button = new JBRadioButton(Constant.V2_BTN_DES);
+        v2Button.addChangeListener(e -> {
+            if (v2Button.isSelected()) {
+                mPrefVersion = PrefVersion.V2;
+                performOKAction();
+            }
+        });
+        myPanel.add(v2Button);
         init();
     }
 
@@ -69,16 +81,7 @@ public class WindowPickerDialog extends DialogWrapper {
 
     @Override
     protected void doOKAction() {
-        Object selection = myWindowsCombo.getSelectedItem();
-        if (selection instanceof ClientWindow) {
-            mySelectedWindow = (ClientWindow)selection;
-        }
         super.doOKAction();
-    }
-
-    @Nullable
-    public ClientWindow getSelectedWindow() {
-        return mySelectedWindow;
     }
 
     @Nullable

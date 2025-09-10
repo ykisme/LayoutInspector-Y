@@ -40,6 +40,7 @@ import com.intellij.openapi.util.text.StringUtil;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import yk.plugin.layoutinspector.config.MyPluginSettings;
 import yk.plugin.layoutinspector.config.PrefVersion;
 
@@ -57,18 +58,22 @@ public class LayoutInspectorCaptureTask extends Task.Backgroundable {
     private String myError;
     private byte[] myData;
     private LayoutInspectorResult myResult;
+    @Nullable
+    private PrefVersion mPrefVersion;
 
-    public LayoutInspectorCaptureTask(@NotNull Project project, @NotNull Client client, @NotNull ClientWindow window) {
+    public LayoutInspectorCaptureTask(@NotNull Project project, @NotNull Client client, @NotNull ClientWindow window,
+                                      @Nullable PrefVersion prefVersion) {
         super(project, "Capturing View Hierarchy");
         myClient = client;
         myWindow = window;
+        mPrefVersion = prefVersion;
     }
 
     @Override
     public void run(@NotNull ProgressIndicator indicator) {
         LayoutInspectorCaptureOptions options = new LayoutInspectorCaptureOptions();
         options.setTitle(myWindow.getDisplayName());
-        boolean v2Enable = MyPluginSettings.getInstance().getState().getPrefVersion() == PrefVersion.V2;
+        boolean v2Enable = mPrefVersion == PrefVersion.V2;
         ProtocolVersion version =
                 determineProtocolVersion(myClient.getDevice().getVersion().getApiLevel(), v2Enable);
         options.setVersion(

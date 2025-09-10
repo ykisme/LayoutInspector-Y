@@ -11,4 +11,8 @@ object Constant {
     const val CONFIG_PREFVERSION_V2 = "V2"
     const val CONFIG_PREFVERSION_V1V2 = "Mixed"
     const val CONFIG_PREFVERSION_ASK = "Always ask"
+
+    const val TITLE_SELECT_VERSION = "Select version"
+    const val V1_BTN_DES = "V1 (slow, more information)"
+    const val V2_BTN_DES = "V2 (faster, less information)"
 }
