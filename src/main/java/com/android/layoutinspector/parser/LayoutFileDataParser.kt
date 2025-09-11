@@ -18,6 +18,7 @@ package com.android.layoutinspector.parser
 import com.android.layoutinspector.LayoutInspectorCaptureOptions
 import com.android.layoutinspector.model.LayoutFileData
 import com.android.layoutinspector.model.ViewNode
+import yk.plugin.layoutinspector.data.LayoutExtraInfo
 import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
 import java.io.File
@@ -67,6 +68,14 @@ object LayoutFileDataParser {
             // Preview image
             previewBytes = ByteArray(input.readInt())
             input.readFully(previewBytes)
+            if (input.available() > 0) {
+                val extraBytes = ByteArray(input.readInt())
+                input.readFully(extraBytes)
+                val extraInfo = LayoutExtraInfo.byteArray2Map(extraBytes)
+                extraInfo.onSuccess {
+                    println(extraInfo)
+                }
+            }
         }
 
         bufferedImage = ImageIO.read(ByteArrayInputStream(previewBytes))

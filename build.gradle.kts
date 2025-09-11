@@ -3,6 +3,7 @@ import java.util.*
 plugins {
     id("java") // java
     id("org.jetbrains.kotlin.jvm") version "1.9.21" // kotlin
+    kotlin("plugin.serialization") version "1.9.21" // 关键插件
     id("org.jetbrains.intellij") version "1.16.1" // intellij
 }
 
@@ -71,4 +72,5 @@ tasks {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")
 }

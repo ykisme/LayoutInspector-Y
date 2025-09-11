@@ -18,6 +18,7 @@ package com.android.layoutinspector
 import com.android.layoutinspector.model.ClientWindow
 import com.android.layoutinspector.model.ViewNode
 import com.android.layoutinspector.parser.ViewNodeParser
+import yk.plugin.layoutinspector.data.LayoutExtraInfo
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.ObjectOutputStream
@@ -80,6 +81,13 @@ object LayoutInspectorBridge {
 
             output.writeInt(preview.size)
             output.write(preview)
+            val layoutExtraInfo = LayoutExtraInfo(null, 100, mapOf("1" to "hello"))
+            try {
+                val jsonBytes = layoutExtraInfo.toJsonByteArray()
+                output.writeInt(jsonBytes.size)
+                output.write(jsonBytes)
+            } catch (_: Exception) {
+            }
         } catch (e: IOException) {
             return LayoutInspectorResult(
                 null,
