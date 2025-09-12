@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 /** Represents a root window.  */
-class ClientWindow(val title: String, private val client: Client, val clientViewInspector: ClientViewInspector = object : ClientViewInspector {}) {
+class ClientWindow(val title: String, val client: Client, val clientViewInspector: ClientViewInspector = object : ClientViewInspector {}) {
 
     /**
      * Returns the name for the window suitable for displaying on the UI. Returns the class name if

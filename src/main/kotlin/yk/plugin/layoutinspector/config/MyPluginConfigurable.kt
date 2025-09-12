@@ -33,6 +33,10 @@ class MyPluginConfigurable : Configurable {
     private lateinit var buttonAsk: JBRadioButton
     private lateinit var buttonGroup: ButtonGroup
     private var currentPrefVersion = PrefVersion.ASK
+    private lateinit var checkboxFileNameProcess: JBCheckBox
+    private lateinit var checkboxFileNameWindow: JBCheckBox
+    private lateinit var checkboxFileNameTime: JBCheckBox
+    private lateinit var fileNameSettings: JPanel
 
     private val mPrefVersionListener = object : ActionListener {
         override fun actionPerformed(e: ActionEvent?) {
@@ -76,6 +80,9 @@ class MyPluginConfigurable : Configurable {
         currentPrefVersion = settings.state.prefVersion
         refreshVersion(settings.state.prefVersion)
 
+        // file name settings
+        initFileNameSettings()
+
         apiUri = JBTextField(settings.state.apiUrl)
             // 输入验证
             .apply {
@@ -101,6 +108,7 @@ class MyPluginConfigurable : Configurable {
         }
         return formBuilder
             .addLabeledComponent(Constant.CONFIG_PREFVERSION, prefVersionButtonGroup)
+            .addLabeledComponent(Constant.CONFIG_FILE_NAME, fileNameSettings)
             .addLabeledComponent("API 地址:", apiUri, 1, false)
             .addLabeledComponent("启用功能:", enableCheckBox)
             .addLabeledComponent("最大结果数:", maxSpinner)
@@ -108,7 +116,29 @@ class MyPluginConfigurable : Configurable {
             .panel
     }
 
+    private fun initFileNameSettings() {
+        fileNameSettings = JPanel()
+        checkboxFileNameProcess = JBCheckBox("Process name",
+            settings.state.fileNameElements.contains(FileNameElement.PROCESS))
+        checkboxFileNameWindow = JBCheckBox("Window name",
+            settings.state.fileNameElements.contains(FileNameElement.WINDOW))
+        checkboxFileNameTime = JBCheckBox("Time",
+            settings.state.fileNameElements.contains(FileNameElement.TIME))
+        fileNameSettings.add(checkboxFileNameProcess)
+        fileNameSettings.add(checkboxFileNameWindow)
+        fileNameSettings.add(checkboxFileNameTime)
+    }
+
+    private fun currentFileSettings(): Set<FileNameElement> {
+        return buildSet {
+            if (checkboxFileNameProcess.isSelected) add(FileNameElement.PROCESS)
+            if (checkboxFileNameWindow.isSelected) add(FileNameElement.WINDOW)
+            if (checkboxFileNameTime.isSelected) add(FileNameElement.TIME)
+        }
+    }
+
     override fun isModified() = settings.state.apiUrl != apiUri.getText() ||
+            settings.state.fileNameElements != currentFileSettings() ||
             settings.state.prefVersion != currentPrefVersion ||
             settings.state.enableFeature != enableCheckBox.isSelected ||
             settings.state.maxResults != maxSpinner.value
@@ -116,6 +146,8 @@ class MyPluginConfigurable : Configurable {
     override fun apply() {
         settings.state.prefVersion = currentPrefVersion
         settings.state.apiUrl = apiUri.getText()
+        val fileNameSet = currentFileSettings()
+        settings.state.fileNameElements = fileNameSet
         settings.state.enableFeature = enableCheckBox.isSelected
         settings.state.maxResults = maxSpinner.value as Int
         settings.loadState(settings.state) // 触发持久化
@@ -140,6 +172,9 @@ class MyPluginConfigurable : Configurable {
 
     override fun reset() {
         refreshVersion(settings.state.prefVersion)
+        checkboxFileNameProcess.setSelected(settings.state.fileNameElements.contains(FileNameElement.PROCESS))
+        checkboxFileNameWindow.setSelected(settings.state.fileNameElements.contains(FileNameElement.WINDOW))
+        checkboxFileNameTime.setSelected(settings.state.fileNameElements.contains(FileNameElement.TIME))
         currentPrefVersion = settings.state.prefVersion
         apiUri.setText(settings.state.apiUrl)
         enableCheckBox.isSelected = settings.state.enableFeature

@@ -13,7 +13,12 @@ data class PluginState(
     var enableFeature: Boolean = true,
     var maxResults: Int = 10,
     var prefVersion: PrefVersion = PrefVersion.ASK,
+    var fileNameElements: Set<FileNameElement> = setOf(FileNameElement.PROCESS, FileNameElement.TIME)
 )
+
+enum class FileNameElement {
+    PROCESS, WINDOW, TIME,
+}
 
 enum class PrefVersion(private val type: Int) {
     V1(1), V2(2), V1V2(3), ASK(4);

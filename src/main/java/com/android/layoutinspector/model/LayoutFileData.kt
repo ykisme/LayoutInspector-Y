@@ -16,6 +16,7 @@
 package com.android.layoutinspector.model
 
 import com.android.layoutinspector.LayoutInspectorCaptureOptions
+import yk.plugin.layoutinspector.data.LayoutExtraInfo
 import java.awt.image.BufferedImage
 
 /**
@@ -24,5 +25,6 @@ import java.awt.image.BufferedImage
 data class LayoutFileData(
     val bufferedImage: BufferedImage?,
     val node: ViewNode?,
-    val options: LayoutInspectorCaptureOptions
+    val options: LayoutInspectorCaptureOptions,
+    val extrasInfo: LayoutExtraInfo?,
 )

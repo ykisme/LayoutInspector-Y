@@ -7,7 +7,9 @@ import kotlinx.serialization.json.Json
 import java.nio.charset.Charset
 
 @Serializable
-data class LayoutExtraInfo(var a: String?, var b: Int?, var c: Map<String, String>?) {
+data class LayoutExtraInfo(val deviceName: String?, val deviceSeri: String?,
+                           val clientName: String?, val apiLevel: String?,
+                           val windowName: String?, val processName: String?) {
     fun toJsonByteArray(): ByteArray {
         val json = Json {
             ignoreUnknownKeys = true

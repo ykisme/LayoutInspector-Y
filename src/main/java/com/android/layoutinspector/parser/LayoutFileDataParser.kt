@@ -52,7 +52,7 @@ object LayoutFileDataParser {
         var options = LayoutInspectorCaptureOptions()
 
         var previewBytes = ByteArray(0)
-
+        var extraInfo: LayoutExtraInfo? = null
         ObjectInputStream(ByteArrayInputStream(bytes)).use { input ->
             // Parse options
             options.parse(input.readUTF())
@@ -71,15 +71,12 @@ object LayoutFileDataParser {
             if (input.available() > 0) {
                 val extraBytes = ByteArray(input.readInt())
                 input.readFully(extraBytes)
-                val extraInfo = LayoutExtraInfo.byteArray2Map(extraBytes)
-                extraInfo.onSuccess {
-                    println(extraInfo)
-                }
+                extraInfo = LayoutExtraInfo.byteArray2Map(extraBytes).getOrNull()
             }
         }
 
         bufferedImage = ImageIO.read(ByteArrayInputStream(previewBytes))
 
-        return LayoutFileData(bufferedImage, node, options)
+        return LayoutFileData(bufferedImage, node, options, extraInfo)
     }
 }

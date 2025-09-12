@@ -37,12 +37,9 @@ public class StudioFlags {
   public static final Flag<Boolean> LAYOUT_INSPECTOR_SUB_VIEW_ENABLED = Flag.create(
       LAYOUT_INSPECTOR, "sub.view", "Enable the sub view feature",
       "If enabled, changes the preview to focus on a component.", true);
-  public static final Flag<Boolean> LAYOUT_INSPECTOR_V2_PROTOCOL_ENABLED = Flag.create(
-      LAYOUT_INSPECTOR, "capture.v2", "Enable using V2 protocol to capture view data",
-      "If enabled, uses V2 protocol to capture view information from device.", true);
   public static final Flag<Boolean> LAYOUT_INSPECTOR_EDITING_ENABLED = Flag.create(
       LAYOUT_INSPECTOR, "ui.editing", "Enable editing ViewNode properties in the properties table.",
-      "If enabled, users can edit properties in the properties table.", false);
+      "If enabled, users can edit properties in the properties table.", true);
   public static final Flag<Boolean> DYNAMIC_LAYOUT_INSPECTOR_ENABLED = Flag.create(
       LAYOUT_INSPECTOR, "dynamic.layout.inspector", "Enable dynamic layout inspector",
       "Turns on the dynamic layout inspector.", true);

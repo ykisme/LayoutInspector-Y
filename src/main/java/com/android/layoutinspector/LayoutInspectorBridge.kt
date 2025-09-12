@@ -81,7 +81,12 @@ object LayoutInspectorBridge {
 
             output.writeInt(preview.size)
             output.write(preview)
-            val layoutExtraInfo = LayoutExtraInfo(null, 100, mapOf("1" to "hello"))
+            val deviceName = window.client.device?.name
+            val deviceSerialNumber = window.client.device?.serialNumber
+            val clientName = window.client.clientData?.clientDescription
+            val apiLevel = ""
+            val layoutExtraInfo = LayoutExtraInfo(deviceName, deviceSerialNumber,clientName,
+                apiLevel, window.title, null)
             try {
                 val jsonBytes = layoutExtraInfo.toJsonByteArray()
                 output.writeInt(jsonBytes.size)

@@ -136,7 +136,7 @@ public class LayoutInspectorCaptureTask extends Task.Backgroundable {
             } else {
                 captureTypeClass = LayoutInspectorCaptureTypeV2.class;
             }
-            Capture capture = service.createCapture(captureTypeClass, myData, service.getSuggestedName(myClient));
+            Capture capture = service.createCapture(captureTypeClass, myData, service.getSuggestedName(myClient, myWindow.getDisplayName()));
             final VirtualFile file = capture.getFile();
             file.refresh(true, false, () -> UIUtil.invokeLaterIfNeeded(() -> {
                 OpenFileDescriptor descriptor = new OpenFileDescriptor(myProject, file);
