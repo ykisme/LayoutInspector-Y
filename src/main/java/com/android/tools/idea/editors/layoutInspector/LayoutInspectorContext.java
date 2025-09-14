@@ -16,6 +16,8 @@
 package com.android.tools.idea.editors.layoutInspector;
 
 import com.android.annotations.NonNull;
+import com.android.layoutinspector.LayoutInspectorCaptureOptions;
+import com.android.layoutinspector.ProtocolVersion;
 import com.google.common.annotations.VisibleForTesting;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.Client;
@@ -45,17 +47,21 @@ import com.intellij.notification.NotificationType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
 import com.intellij.openapi.diagnostic.Logger;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.JBCheckboxMenuItem;
 import com.intellij.openapi.ui.JBPopupMenu;
 import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.SpeedSearchComparator;
 import com.intellij.ui.TableSpeedSearch;
+import org.jetbrains.android.sdk.AndroidSdkUtils;
 import org.jetbrains.android.util.AndroidBundle;
 import org.jetbrains.annotations.NonNls;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import yk.plugin.layoutinspector.config.PrefVersion;
 import yk.plugin.layoutinspector.data.LayoutExtraInfo;
+import yk.plugin.layoutinspector.utils.ClientUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -112,6 +118,8 @@ public class LayoutInspectorContext implements Disposable, DataProvider, ViewNod
     private final JMenuItem mySubtreePreviewMenuItem;
     @Nullable
     private final LayoutExtraInfo myLayoutExtraInfo;
+    private final Disposable myParentDisposable;
+    private final LayoutInspectorCaptureOptions myOptions;
 
     @NotNull
     private static Logger getLogger() {
@@ -119,6 +127,8 @@ public class LayoutInspectorContext implements Disposable, DataProvider, ViewNod
     }
 
     public LayoutInspectorContext(@NotNull LayoutFileData layoutParser, @NotNull Disposable parentDisposable) {
+        myParentDisposable = parentDisposable;
+        myOptions = layoutParser.getOptions();
         ViewNode root = layoutParser.getNode();
         BufferedImage image = layoutParser.getBufferedImage();
         myLayoutExtraInfo = layoutParser.getExtrasInfo();
@@ -320,6 +330,10 @@ public class LayoutInspectorContext implements Disposable, DataProvider, ViewNod
     public void deviceChanged(@NonNull IDevice device, int changeMask) {
     }
 
+    public @NotNull Disposable getParentDispose() {
+        return myParentDisposable;
+    }
+
     private class NodeRightClickAdapter extends MouseAdapter {
         private void onPopupTriggerCheck(MouseEvent event) {
             if (event.isPopupTrigger()) {
@@ -413,7 +427,7 @@ public class LayoutInspectorContext implements Disposable, DataProvider, ViewNod
         }
     }
 
-    private static void createNotification(@NotNull String message, @NotNull NotificationType type) {
+    public static void createNotification(@NotNull String message, @NotNull NotificationType type) {
         new Notification(
                 NotificationGroup.createIdWithTitle("Layout Inspector", AndroidBundle.message("android.ddms.actions.layoutinspector.notification.group")),
                 AndroidBundle.message("android.ddms.actions.layoutinspector.notification.title"),
@@ -479,5 +493,30 @@ public class LayoutInspectorContext implements Disposable, DataProvider, ViewNod
         myPreview.setPreview(myModel.getBufferedImage(), node);
         myNodeTree = createNodeTree(node);
         myPreview.repaint();
+    }
+
+    public boolean canReinspector() {
+        return myModel.isConnected() || (myLayoutExtraInfo != null && myLayoutExtraInfo.canReinspector());
+    }
+
+    public void reinspector(Project project) {
+        if (myModel.isConnected()) {
+            PrefVersion pf = myOptions.getVersion() == ProtocolVersion.Version1 ? PrefVersion.V1 : PrefVersion.V2;
+            LayoutInspectorCaptureTask captureTask = new LayoutInspectorCaptureTask(project,
+                    myModel.getClient(), myModel.getWindow(), pf);
+            captureTask.queue();
+            return;
+        }
+        if (ClientUtils.haveClient(AndroidSdkUtils.getDebugBridge(project)) && myLayoutExtraInfo != null) {
+            String windowName = myLayoutExtraInfo.getWindowName();
+            String clientName = myLayoutExtraInfo.getClientName();
+            if (windowName != null && clientName != null) {
+                PrefVersion pf = myOptions.getVersion() == ProtocolVersion.Version1 ? PrefVersion.V1 : PrefVersion.V2;
+                ReInspectorCaptureTask captureTask = new ReInspectorCaptureTask(project,
+                        myLayoutExtraInfo.getDeviceName(), myLayoutExtraInfo.getDeviceSeri(),
+                        clientName, pf, windowName);
+                captureTask.queue();
+            }
+        }
     }
 }

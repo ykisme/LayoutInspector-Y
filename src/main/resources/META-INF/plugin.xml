@@ -1,7 +1,7 @@
 <idea-plugin>
-    <id>com.pingfangx.plugin.legacylayoutinspector</id>
+    <id>yk.plugin.lly</id>
 
-    <name>Legacy Layout Inspector</name>
+    <name>Legacy Layout Inspector Y</name>
 
     <vendor email="pingfangx@pingfangx.com" url="https://www.pingfangx.com">pingfangx</vendor>
 

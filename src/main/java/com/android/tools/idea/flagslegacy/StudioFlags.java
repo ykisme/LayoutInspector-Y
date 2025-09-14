@@ -43,13 +43,6 @@ public class StudioFlags {
   public static final Flag<Boolean> DYNAMIC_LAYOUT_INSPECTOR_ENABLED = Flag.create(
       LAYOUT_INSPECTOR, "dynamic.layout.inspector", "Enable dynamic layout inspector",
       "Turns on the dynamic layout inspector.", true);
-  public static final Flag<Boolean> DYNAMIC_LAYOUT_INSPECTOR_EDITING_ENABLED = Flag.create(
-      LAYOUT_INSPECTOR, "dynamic.layout.editor", "Enable dynamic layout editor",
-      "If enabled, users can edit layout properties with live updates on a device while the dynamic layout inspector is running.",
-      false);
-  public static final Flag<Boolean> DYNAMIC_LAYOUT_INSPECTOR_ENABLE_SNAPSHOTS = Flag.create(
-      LAYOUT_INSPECTOR, "dynamic.layout.inspector.enable.snapshots", "Enable snapshots",
-      "Enable saving and loading snapshots in the layout inspector.", true);
 
   public static class Flag<T> {
     private final T defaultValue;

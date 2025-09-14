@@ -22,13 +22,21 @@ import com.android.ddmlib.DebugViewDumpHandler
 import com.android.layoutinspector.LayoutInspectorCaptureOptions
 import com.android.layoutinspector.ProtocolVersion
 import com.google.common.collect.Lists
+import org.toml.lang.psi.ext.TomlLiteralKind
 import java.io.IOException
 import java.nio.ByteBuffer
 import java.util.concurrent.TimeUnit
 import java.util.concurrent.atomic.AtomicReference
 
 /** Represents a root window.  */
-class ClientWindow(val title: String, val client: Client, val clientViewInspector: ClientViewInspector = object : ClientViewInspector {}) {
+
+class ClientWindow
+@JvmOverloads
+constructor(
+    val title: String,
+    val client: Client,
+    val clientViewInspector: ClientViewInspector = object : ClientViewInspector {}
+) {
 
     /**
      * Returns the name for the window suitable for displaying on the UI. Returns the class name if
@@ -37,13 +45,7 @@ class ClientWindow(val title: String, val client: Client, val clientViewInspecto
     val displayName: String?
         get() {
             val appName = client.clientData.clientDescription
-            val parts: ArrayList<String> = arrayListOf(*title.split("/").toTypedArray())
-            parts.remove("")
-            parts.remove(appName)
-
-            return if (parts.isEmpty()) {
-                appName
-            } else parts[if (parts.size > 2) 1 else 0]
+            return windowNameDisplay(title, appName)
         }
 
     /** Byte array representing the view hierarchy dump of the window.  */
@@ -63,11 +65,12 @@ class ClientWindow(val title: String, val client: Client, val clientViewInspecto
 
     /** Byte array representing image preview of the provided node.  */
     fun loadViewImage(node: ViewNode, timeout: Long, unit: TimeUnit): ByteArray? =
-      clientViewInspector.captureView(client, title, node, timeout, unit)
+        clientViewInspector.captureView(client, title, node, timeout, unit)
 
     private class ListViewRootsHandler :
-      DebugViewDumpHandler(
-        DebugViewDumpHandler.CHUNK_VULW) {
+        DebugViewDumpHandler(
+            DebugViewDumpHandler.CHUNK_VULW
+        ) {
 
         private val myViewRoots = Lists.newCopyOnWriteArrayList<String>()
 
@@ -121,6 +124,17 @@ class ClientWindow(val title: String, val client: Client, val clientViewInspecto
                 ListViewRootsHandler().getWindows(client, timeout, unit)
             } else null
         }
+
+        @JvmStatic
+        fun windowNameDisplay(origin: String, appName: String): String {
+            val parts: ArrayList<String> = arrayListOf(*origin.split("/").toTypedArray())
+            parts.remove("")
+            parts.remove(appName)
+
+            return if (parts.isEmpty()) {
+                appName
+            } else parts[if (parts.size > 2) 1 else 0]
+        }
     }
 
     @VisibleForTesting
@@ -132,14 +146,15 @@ class ClientWindow(val title: String, val client: Client, val clientViewInspecto
             includeProperties: Boolean,
             useV2: Boolean,
             timeout: Long,
-            timeUnit: TimeUnit): ByteArray? {
+            timeUnit: TimeUnit
+        ): ByteArray? {
 
             val handler = CaptureByteArrayHandler(DebugViewDumpHandler.CHUNK_VURT)
             client.dumpViewHierarchy(title, skipChildren, includeProperties, useV2, handler)
 
             return try {
                 handler.getData(timeout, timeUnit)
-            } catch(e: IOException) {
+            } catch (e: IOException) {
                 null
             }
         }
@@ -149,13 +164,14 @@ class ClientWindow(val title: String, val client: Client, val clientViewInspecto
             title: String,
             node: ViewNode,
             timeout: Long,
-            timeUnit: TimeUnit): ByteArray? {
+            timeUnit: TimeUnit
+        ): ByteArray? {
 
             val handler = CaptureByteArrayHandler(DebugViewDumpHandler.CHUNK_VUOP)
             client.captureView(title, node.toString(), handler)
             return try {
                 handler.getData(timeout, timeUnit)
-            } catch(e: IOException) {
+            } catch (e: IOException) {
                 null
             }
         }

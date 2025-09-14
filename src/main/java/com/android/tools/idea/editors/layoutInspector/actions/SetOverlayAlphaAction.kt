@@ -31,39 +31,38 @@ import javax.swing.event.ChangeListener
  * Only visible if there is an overlay selected.
  */
 class SetOverlayAlphaAction(private val myPreview: ViewNodeActiveDisplay) :
-    AnAction("Overlay Alpha", "Set Overlay Alpha", null), CustomComponentAction, ChangeListener {
-
-  override fun update(e: AnActionEvent) {
-    super.update(e)
-    if (e == null) return
-    e.presentation.isEnabledAndVisible = myPreview.hasOverlay()
-  }
-
-  override fun createCustomComponent(presentation: Presentation, place: String): JComponent {
-    val alphaSlider = JSlider(JSlider.HORIZONTAL, 0, 100, (myPreview.overlayAlpha * 100).toInt())
-    alphaSlider.addChangeListener(this)
-
-    val alphaLabel = JBLabel("Alpha:").apply {
-      border = EmptyBorder(0, 5, 0, 0)
-      labelFor = alphaSlider
+    AnAction("", "Set Overlay Alpha", null), CustomComponentAction, ChangeListener {
+    override fun update(e: AnActionEvent) {
+        super.update(e)
+        if (e == null) return
+        e.presentation.isEnabledAndVisible = myPreview.hasOverlay()
     }
 
-    return JPanel().apply {
-      layout = BoxLayout(this, BoxLayout.LINE_AXIS)
-      add(JSeparator(SwingConstants.VERTICAL))
-      add(alphaLabel)
-      add(alphaLabel)
+    override fun createCustomComponent(presentation: Presentation, place: String): JComponent {
+        val alphaSlider = JSlider(JSlider.HORIZONTAL, 0, 100, (myPreview.overlayAlpha * 100).toInt())
+        alphaSlider.addChangeListener(this)
+
+        val alphaLabel = JBLabel("Alpha:").apply {
+            border = EmptyBorder(0, 5, 0, 0)
+            labelFor = alphaSlider
+        }
+
+        return JPanel().apply {
+            layout = BoxLayout(this, BoxLayout.LINE_AXIS)
+            add(JSeparator(SwingConstants.VERTICAL))
+            add(alphaLabel)
+            add(alphaLabel)
+        }
     }
-  }
 
-  override fun actionPerformed(e: AnActionEvent) {
-    // noop, action is handled in alphaSlider's change listener
-  }
+    override fun actionPerformed(e: AnActionEvent) {
+        // noop, action is handled in alphaSlider's change listener
+    }
 
-  override fun stateChanged(e: ChangeEvent?) {
-    if (e == null) return
-    val source = e.source as JSlider
-    myPreview.overlayAlpha = source.value.toFloat() / 100
-  }
+    override fun stateChanged(e: ChangeEvent?) {
+        if (e == null) return
+        val source = e.source as JSlider
+        myPreview.overlayAlpha = source.value.toFloat() / 100
+    }
 }
 

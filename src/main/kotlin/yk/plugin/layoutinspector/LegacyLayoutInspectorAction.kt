@@ -27,7 +27,6 @@ class LegacyLayoutInspectorAction : AndroidRunLayoutInspectorAction() {
         e.presentation.icon = when(version) {
             PrefVersion.V1 -> Icons.VERSION_V1
             PrefVersion.V2 -> Icons.VERSION_V2
-            PrefVersion.V1V2 -> Icons.VERSION_V1V2
             else -> Icons.VERSION_ASK
         }
     }

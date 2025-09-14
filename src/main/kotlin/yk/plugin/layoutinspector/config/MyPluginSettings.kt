@@ -21,7 +21,7 @@ enum class FileNameElement {
 }
 
 enum class PrefVersion(private val type: Int) {
-    V1(1), V2(2), V1V2(3), ASK(4);
+    V1(1), V2(2), ASK(10);
 
     fun toInt(): Int = type
 
@@ -30,7 +30,6 @@ enum class PrefVersion(private val type: Int) {
             return when (type) {
                 1 -> V1
                 2 -> V2
-                3 -> V1V2
                 else -> ASK
             }
         }

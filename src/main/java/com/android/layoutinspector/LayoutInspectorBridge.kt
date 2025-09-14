@@ -15,10 +15,12 @@
  */
 package com.android.layoutinspector
 
+import com.android.instantapp.utils.DeviceUtils
 import com.android.layoutinspector.model.ClientWindow
 import com.android.layoutinspector.model.ViewNode
 import com.android.layoutinspector.parser.ViewNodeParser
 import yk.plugin.layoutinspector.data.LayoutExtraInfo
+import yk.plugin.layoutinspector.utils.ClientUtils
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.io.ObjectOutputStream
@@ -84,9 +86,12 @@ object LayoutInspectorBridge {
             val deviceName = window.client.device?.name
             val deviceSerialNumber = window.client.device?.serialNumber
             val clientName = window.client.clientData?.clientDescription
-            val apiLevel = ""
-            val layoutExtraInfo = LayoutExtraInfo(deviceName, deviceSerialNumber,clientName,
-                apiLevel, window.title, null)
+            val apiLevel = window.client.getDevice().getVersion().getApiLevel()
+
+            val layoutExtraInfo = LayoutExtraInfo(
+                deviceName, deviceSerialNumber, clientName,
+                apiLevel.toString(), window.displayName
+            )
             try {
                 val jsonBytes = layoutExtraInfo.toJsonByteArray()
                 output.writeInt(jsonBytes.size)

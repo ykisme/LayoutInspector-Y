@@ -1,13 +1,17 @@
 package yk.plugin.layoutinspector.utils
 
+import com.android.ddmlib.AndroidDebugBridge
 import com.android.ddmlib.Client
 import com.android.ddmlib.IDevice
-import com.intellij.openapi.project.Project
-import org.jetbrains.android.sdk.AndroidSdkUtils
 
 object ClientUtils {
-    fun selectClient(project: Project, deviceName: String?, deviceId: String?, clientName: String?): Client? {
-        val debugBridge = AndroidSdkUtils.getDebugBridge(project) ?: return null
+    @JvmStatic
+    fun selectClient(
+        debugBridge: AndroidDebugBridge,
+        deviceName: String?,
+        deviceId: String?,
+        clientName: String?
+    ): Client? {
         if (clientName == null) return null
         val devices = debugBridge.devices
         if (devices.isEmpty()) return null
@@ -29,5 +33,15 @@ object ClientUtils {
         }
         if (deviceSelect == null) return null
         return deviceSelect.getClient(clientName)
+    }
+
+    @JvmStatic
+    fun haveClient(debugBridge: AndroidDebugBridge): Boolean {
+        return try {
+            val devices = debugBridge.devices
+            return devices.isNotEmpty()
+        } catch (_: Exception) {
+            false
+        }
     }
 }
