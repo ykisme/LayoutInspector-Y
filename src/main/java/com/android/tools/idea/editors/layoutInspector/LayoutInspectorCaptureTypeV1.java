@@ -26,7 +26,7 @@ import icons.StudioIcons;
 import org.jetbrains.annotations.NotNull;
 
 public class LayoutInspectorCaptureTypeV1 extends FileCaptureType {
-    public static final String DOT_EXT_LAYOUT_INSPECTOR = ".li";
+    public static final String DOT_EXT_LAYOUT_INSPECTOR = ".liy";
 
     protected LayoutInspectorCaptureTypeV1() {
         super("Layout Inspector Snapshot(V1)", StudioIcons.Shell.Menu.LAYOUT_INSPECTOR, DOT_EXT_LAYOUT_INSPECTOR);

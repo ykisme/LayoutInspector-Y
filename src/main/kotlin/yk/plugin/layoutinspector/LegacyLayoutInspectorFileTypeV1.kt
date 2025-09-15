@@ -44,6 +44,6 @@ class LegacyLayoutInspectorFileTypeV1 private constructor() : FileType {
         // 插件需要,反射调用
         @JvmField
         val INSTANCE = LegacyLayoutInspectorFileTypeV1()
-        const val EXT_LAYOUT_INSPECTOR = "li"
+        const val EXT_LAYOUT_INSPECTOR = "liy"
     }
 }
