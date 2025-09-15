@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "yk.plugin.layoutinspector"
-version = "1.3.0"
+version = "1.3.3"
 
 repositories {
     mavenCentral()
@@ -68,6 +68,12 @@ tasks {
     buildSearchableOptions {
         // May be affected by intellij.version, disable it.
         enabled = false
+    }
+}
+
+tasks.withType<org.jetbrains.intellij.tasks.RunIdeTask> {
+    jvmArgumentProviders += CommandLineArgumentProvider {
+        listOf("-Didea.kotlin.plugin.use.k2=true") // 启用K2模式的参数
     }
 }
 

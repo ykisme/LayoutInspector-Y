@@ -59,13 +59,13 @@
                 implementation="yk.plugin.layoutinspector.LegacyLayoutInspectorEditorProviderV2"/>
     </extensions>
     <extensionPoints>
-        <extensionPoint qualifiedName="com.android.captureType"
+        <extensionPoint qualifiedName="yk.plugin.layoutinspector.captureType"
                         interface="com.android.tools.idea.profiling.capture.CaptureType"/>
     </extensionPoints>
-    <extensions defaultExtensionNs="com.android">
+    <extensions defaultExtensionNs="yk.plugin.layoutinspector">
         <captureType implementation="com.android.tools.idea.editors.layoutInspector.LayoutInspectorCaptureTypeV1"/>
     </extensions>
-    <extensions defaultExtensionNs="com.android">
+    <extensions defaultExtensionNs="yk.plugin.layoutinspector">
         <captureType implementation="com.android.tools.idea.editors.layoutInspector.LayoutInspectorCaptureTypeV2"/>
     </extensions>
 
@@ -82,4 +82,7 @@
     </extensions>
     <!-- IMPORTANT: 声明 Kotlin 依赖 -->
     <depends>org.jetbrains.kotlin</depends>
+    <extensions defaultExtensionNs="org.jetbrains.kotlin">
+        <supportsKotlinPluginMode supportsK2="true"/> <!-- 关键配置：声明支持K2模式 -->
+    </extensions>
 </idea-plugin>
