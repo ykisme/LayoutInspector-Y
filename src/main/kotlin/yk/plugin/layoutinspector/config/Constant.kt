@@ -3,8 +3,8 @@ package yk.plugin.layoutinspector.config
 object Constant {
     const val ACTION_LAYOUT_INSPECTOR_TITLE: String = "Layout Inspector Y"
     const val ACTION_LAYOUT_INSPECTOR_DES: String = "Inspect Layout for the selected window"
-    const val PLUGIN_NAME = "SLayoutInspector"
-    const val SETTINGS_NAME = "$PLUGIN_NAME Settings"
+    const val PLUGIN_NAME = "LayoutInspector-Y"
+    const val SETTINGS_NAME = PLUGIN_NAME
 
     const val CONFIG_PREFVERSION = "default version:"
     const val CONFIG_PREFVERSION_V1 = "V1"

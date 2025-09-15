@@ -1,9 +1,9 @@
 <idea-plugin>
     <id>yk.plugin.lly</id>
 
-    <name>Legacy Layout Inspector Y</name>
+    <name>LayoutInspector-Y</name>
 
-    <vendor email="pingfangx@pingfangx.com" url="https://www.pingfangx.com">pingfangx</vendor>
+    <vendor email="" url="https://www.pingfangx.com">yk</vendor>
 
     <description><![CDATA[
     Android Studio deprecated the legacy layout inspector, but we need it.
@@ -76,6 +76,7 @@
 <!--        todo 方便测试,后续放到tools里面   -->
 <!--                groupId="tools"-->
         <applicationConfigurable
+                displayName="LayoutInspector-Y"
                 id="MyPluginConfig"
                 instance="yk.plugin.layoutinspector.config.MyPluginConfigurable"/>  <!-- 图标配置 -->
     </extensions>

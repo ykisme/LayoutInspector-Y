@@ -1,1 +1,1 @@
-rootProject.name = "Layout-Inspector-Y"
+rootProject.name = "LayoutInspector-Y"
