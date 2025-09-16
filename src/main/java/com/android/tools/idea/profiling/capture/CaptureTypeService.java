@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class CaptureTypeService {
 
-  ExtensionPointName<CaptureType> EP_NAME = ExtensionPointName.create("com.android.captureType");
+  ExtensionPointName<CaptureType> EP_NAME = ExtensionPointName.create("yk.plugin.layoutinspector.captureType");
 
   @NotNull
   public static CaptureTypeService getInstance() {

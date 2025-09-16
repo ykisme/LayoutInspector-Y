@@ -58,6 +58,8 @@ public class WindowPickerDialog extends DialogWrapper {
         // add perfversion settings
         if (MyPluginSettings.getInstance().getState().getPrefVersion() == PrefVersion.ASK) {
             initPrefVersionButtons(myPanel);
+        } else {
+            mPrefVersion = MyPluginSettings.getInstance().getState().getPrefVersion();
         }
         init();
     }

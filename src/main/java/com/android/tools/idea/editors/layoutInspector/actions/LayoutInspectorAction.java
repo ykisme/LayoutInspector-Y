@@ -130,6 +130,7 @@ public class LayoutInspectorAction extends AbstractClientAction {
                 if (window == null) {
                     return;
                 }
+                prefVersion = pickerDialog.getSelectedPrefVersion();
             }
 
             LayoutInspectorCaptureTask captureTask = new LayoutInspectorCaptureTask(myProject, myClient, window, prefVersion);
