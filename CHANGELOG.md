@@ -1,3 +1,9 @@
+## 1.3.4 2025917
+* Supports V1 and V2 versions.
+Tip: V1 is slower but provides more detailed information, while V2 is faster with reduced output.
+* Supports defining output filename format with variables.
+* Supports the refresh button for quick re-acquisition of the layout.
+
 ## 1.2.0 - 20231222
 * Support Android Studio Hedgehog | 2023.1.1
 

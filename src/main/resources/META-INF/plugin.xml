@@ -3,27 +3,20 @@
 
     <name>LayoutInspector-Y</name>
 
-    <vendor email="" url="https://www.pingfangx.com">yk</vendor>
+    <vendor email="" >ykk</vendor>
 
     <description><![CDATA[
-    Android Studio deprecated the legacy layout inspector, but we need it.
+This plugin is modified based on the old version of Layout Inspector and includes several convenient features. For system app developers, selecting specific windows to obtain layouts is crucial. However, the new version of AS Layout Inspector lacks this functionality, which is why this plugin is maintained and developed.
+
+This project is developed based on https://github.com/pingfangx/androidstudiox and references the design of https://github.com/CoXier/LayoutInspectorV2-Pro. Tribute to pingfangx and CoXier.
     ]]></description>
 
     <change-notes><![CDATA[
-    <b>1.2.0</b><br>
-    <ul>
-        <li>Support Android Studio Hedgehog | 2023.1.1</li>
-    </ul>
-
-    <b>1.1.0</b><br>
-    <ul>
-        <li>Support Android Studio Dolphin | 2021.3.1</li>
-        <li>Optimise selection to find the smallest view</li>
-    </ul>
-
     <b>1.0.0</b><br>
     <ul>
-        <li>Add Legacy Layout Inspector action</li>
+        <li>Supports V1 and V2 versions.Tip: V1 is slower but provides more detailed information, while V2 is faster with reduced output.</li>
+        <li>Supports defining output filename format with variables.</li>
+        <li>Supports the refresh button for quick re-acquisition of the layout.</li>
     </ul>
     ]]></change-notes>
 
@@ -73,9 +66,8 @@
         <applicationService
                             serviceImplementation="yk.plugin.layoutinspector.config.MyPluginSettings"/>
         <!-- IMPORTANT: 注册全局配置项入口 -->
-<!--        todo 方便测试,后续放到tools里面   -->
-<!--                groupId="tools"-->
         <applicationConfigurable
+                groupId="tools"
                 displayName="LayoutInspector-Y"
                 id="MyPluginConfig"
                 instance="yk.plugin.layoutinspector.config.MyPluginConfigurable"/>  <!-- 图标配置 -->

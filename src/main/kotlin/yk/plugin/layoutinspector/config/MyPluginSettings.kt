@@ -9,9 +9,6 @@ import kotlinx.coroutines.flow.asStateFlow
 
 // 定义状态数据类
 data class PluginState(
-    var apiUrl: String = "https://api.example.com",
-    var enableFeature: Boolean = true,
-    var maxResults: Int = 10,
     var prefVersion: PrefVersion = PrefVersion.ASK,
     var fileNameElements: Set<FileNameElement> = setOf(FileNameElement.PROCESS, FileNameElement.TIME)
 )
@@ -22,8 +19,6 @@ enum class FileNameElement {
 
 enum class PrefVersion(private val type: Int) {
     V1(1), V2(2), ASK(10);
-
-    fun toInt(): Int = type
 
     companion object {
         fun from(type: Int): PrefVersion {

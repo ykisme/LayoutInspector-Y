@@ -3,23 +3,17 @@ package yk.plugin.layoutinspector.config
 import com.intellij.openapi.options.Configurable
 import com.intellij.ui.components.JBCheckBox
 import com.intellij.ui.components.JBRadioButton
-import com.intellij.ui.components.JBTextField
 import com.intellij.util.ui.FormBuilder
-import com.intellij.util.ui.UIUtil
 import org.jetbrains.annotations.Nls
-import java.awt.Color
 import java.awt.event.ActionEvent
 import java.awt.event.ActionListener
-import javax.swing.*
-import javax.swing.event.DocumentEvent
-import javax.swing.event.DocumentListener
+import javax.swing.ButtonGroup
+import javax.swing.JComponent
+import javax.swing.JPanel
 
 class MyPluginConfigurable : Configurable {
     private val settings = MyPluginSettings.getInstance()
     private lateinit var formBuilder: FormBuilder
-    private lateinit var apiUri: JBTextField
-    private lateinit var enableCheckBox: JBCheckBox
-    private lateinit var maxSpinner: JSpinner
     private lateinit var prefVersionButtonGroup: JPanel
     private lateinit var buttonV1: JBRadioButton
     private lateinit var buttonV2: JBRadioButton
@@ -70,36 +64,9 @@ class MyPluginConfigurable : Configurable {
 
         // file name settings
         initFileNameSettings()
-
-        apiUri = JBTextField(settings.state.apiUrl)
-            // 输入验证
-            .apply {
-                document.addDocumentListener(object : DocumentListener {
-                    override fun insertUpdate(e: DocumentEvent) = validate()
-                    override fun removeUpdate(e: DocumentEvent) = validate()
-                    override fun changedUpdate(e: DocumentEvent) = validate()
-
-                    private fun validate() {
-                        val text = (document.getText(0, document.length)).trim()
-                        if (!text.startsWith("http")) {
-                            background = Color.PINK
-                        } else {
-                            this@apply.background = UIUtil.getTextFieldBackground()
-                        }
-                    }
-                })
-            }
-
-        enableCheckBox = JBCheckBox().apply { isSelected = settings.state.enableFeature }
-        maxSpinner = JSpinner(SpinnerNumberModel(10, 1, 100, 1)).apply {
-            value = settings.state.maxResults
-        }
         return formBuilder
             .addLabeledComponent(Constant.CONFIG_PREFVERSION, prefVersionButtonGroup)
             .addLabeledComponent(Constant.CONFIG_FILE_NAME, fileNameSettings)
-            .addLabeledComponent("API 地址:", apiUri, 1, false)
-            .addLabeledComponent("启用功能:", enableCheckBox)
-            .addLabeledComponent("最大结果数:", maxSpinner)
             .addComponentFillVertically(JPanel(), 0)
             .panel
     }
@@ -125,19 +92,14 @@ class MyPluginConfigurable : Configurable {
         }
     }
 
-    override fun isModified() = settings.state.apiUrl != apiUri.getText() ||
+    override fun isModified() =
             settings.state.fileNameElements != currentFileSettings() ||
-            settings.state.prefVersion != currentPrefVersion ||
-            settings.state.enableFeature != enableCheckBox.isSelected ||
-            settings.state.maxResults != maxSpinner.value
+            settings.state.prefVersion != currentPrefVersion
 
     override fun apply() {
         settings.state.prefVersion = currentPrefVersion
-        settings.state.apiUrl = apiUri.getText()
         val fileNameSet = currentFileSettings()
         settings.state.fileNameElements = fileNameSet
-        settings.state.enableFeature = enableCheckBox.isSelected
-        settings.state.maxResults = maxSpinner.value as Int
         settings.loadState(settings.state) // 触发持久化
     }
 
@@ -162,8 +124,5 @@ class MyPluginConfigurable : Configurable {
         checkboxFileNameWindow.setSelected(settings.state.fileNameElements.contains(FileNameElement.WINDOW))
         checkboxFileNameTime.setSelected(settings.state.fileNameElements.contains(FileNameElement.TIME))
         currentPrefVersion = settings.state.prefVersion
-        apiUri.setText(settings.state.apiUrl)
-        enableCheckBox.isSelected = settings.state.enableFeature
-        maxSpinner.value = settings.state.maxResults
     }
 }
