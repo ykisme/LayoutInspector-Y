@@ -17,11 +17,11 @@ package com.android.tools.idea.editors.layoutInspector.impl
 
 import com.android.ddmlib.Client
 import com.android.tools.idea.editors.layoutInspector.AndroidLayoutInspectorService
-import com.android.tools.idea.editors.layoutInspector.actions.LayoutInspectorAction
+import com.android.tools.idea.editors.layoutInspector.actions.GetClientWindowsTask
 import com.intellij.openapi.project.Project
 
 class AndroidLayoutInspectorServiceImpl : AndroidLayoutInspectorService {
-  override fun getTask(project: Project?, client: Client): LayoutInspectorAction.GetClientWindowsTask {
-    return LayoutInspectorAction.GetClientWindowsTask(project, client);
-  }
+    override fun getTask(project: Project?, client: Client): GetClientWindowsTask {
+        return GetClientWindowsTask(project, client);
+    }
 }

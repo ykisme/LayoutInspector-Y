@@ -16,9 +16,9 @@
 package com.android.tools.idea.editors.layoutInspector
 
 import com.android.ddmlib.Client
-import com.android.tools.idea.editors.layoutInspector.actions.LayoutInspectorAction
+import com.android.tools.idea.editors.layoutInspector.actions.GetClientWindowsTask
 import com.intellij.openapi.project.Project
 
 interface AndroidLayoutInspectorService {
-  fun getTask(project: Project?, client: Client): LayoutInspectorAction.GetClientWindowsTask
+  fun getTask(project: Project?, client: Client): GetClientWindowsTask
 }

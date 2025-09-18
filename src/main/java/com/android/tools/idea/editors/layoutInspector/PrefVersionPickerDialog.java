@@ -54,7 +54,7 @@ public class PrefVersionPickerDialog extends DialogWrapper {
         v1Button.addActionListener(e -> {
             if (v1Button.isSelected()) {
                 mPrefVersion = PrefVersion.V1;
-                performOKAction();
+                doOKAction();
             }
         });
         JBRadioButton v2Button = new JBRadioButton(Constant.V2_BTN_DES);
@@ -62,7 +62,7 @@ public class PrefVersionPickerDialog extends DialogWrapper {
         v2Button.addChangeListener(e -> {
             if (v2Button.isSelected()) {
                 mPrefVersion = PrefVersion.V2;
-                performOKAction();
+                doOKAction();
             }
         });
         myPanel.add(v2Button);
@@ -83,11 +83,6 @@ public class PrefVersionPickerDialog extends DialogWrapper {
     @Override
     protected String getDimensionServiceKey() {
         return WINDOW_PICKER_DIMENSIONS_KEY;
-    }
-
-    @Override
-    protected void doOKAction() {
-        super.doOKAction();
     }
 
     @Nullable

@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Arrays;
 import java.util.List;
 
 public class ViewNodeTreeRenderer extends ColoredTreeCellRenderer {
@@ -80,12 +81,17 @@ public class ViewNodeTreeRenderer extends ColoredTreeCellRenderer {
     return name[name.length - 1];
   }
 
+    @NotNull
+    public static List<String> splitKeepDelimiter(@NotNull String string, @NotNull String delimiter) {
+        return Arrays.asList(string.split(String.format("((?<=%1$s)|(?=%1$s))", delimiter)));
+    }
+
   private void displayText(SimpleTextAttributes attr, String cellText) {
     if (myHighlight == null || myHighlight.isEmpty()) {
       append(cellText, attr);
     }
     else { // we want to highlight text that matches by changing the attribute to use a foreground colour
-      List<String> outputs = AndroidTextUtils.splitKeepDelimiter(cellText, myHighlight);
+      List<String> outputs = splitKeepDelimiter(cellText, myHighlight);
       SimpleTextAttributes highlightAttr = SimpleTextAttributes.SYNTHETIC_ATTRIBUTES;
       for (String s : outputs) {
         if (s.equals(myHighlight)) {

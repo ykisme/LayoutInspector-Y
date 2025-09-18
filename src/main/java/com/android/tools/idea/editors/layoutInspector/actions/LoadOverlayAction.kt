@@ -26,12 +26,14 @@ import com.intellij.openapi.actionSystem.Presentation
 import com.intellij.openapi.actionSystem.ex.CustomComponentAction
 import com.intellij.openapi.actionSystem.impl.ActionButtonWithText
 import com.intellij.openapi.diagnostic.Logger
+import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserFactory
 import com.intellij.openapi.fileChooser.FileTypeDescriptor
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import java.awt.Image
+import java.io.FileFilter
 import java.io.IOException
 import javax.imageio.ImageIO
 import javax.swing.Icon
@@ -102,16 +104,40 @@ class LoadOverlayAction(private val myPreview: ViewNodeActiveDisplay) :
     }
 
     private fun loadOverlay(e: AnActionEvent) {
-        // choose image
-        val descriptor = FileTypeDescriptor("Choose Overlay", "svg", "png", "jpg")
+        // 创建文件选择描述符，配置选择行为和文件过滤
+        val descriptor = FileChooserDescriptor(
+            /* 允许选择文件 */ true,
+            /* 允许选择目录 */ false,
+            /* 允许选择JAR中的文件 */ false,
+            /* 允许选择JAR文件 */ false,
+            /* 允许选择多个文件 */ false,
+            /* 允许选择可执行文件 */ true
+        ).apply {
+            // 设置对话框标题
+            title = "Choose Overlay"
+            // 设置文件过滤器，只允许特定图片格式
+            withFileFilter { file ->
+                val extension = file.name.lowercase().substringAfterLast('.', "")
+                extension in setOf("svg", "png", "jpg", "jpeg")
+            }
+        }
+
+        // 创建文件选择对话框
         val fileChooserDialog = FileChooserFactory.getInstance().createFileChooser(descriptor, null, null)
-        val toSelect = LocalFileSystem.getInstance().refreshAndFindFileByPath(e.project?.basePath ?: "/")
-        val files = fileChooserDialog.choose(null, toSelect!!)
+
+        // 获取初始目录
+        val basePath = e.project?.basePath ?: "/"
+        val toSelect = LocalFileSystem.getInstance().refreshAndFindFileByPath(basePath)
+
+        // 显示对话框并获取选择的文件
+        val files = fileChooserDialog.choose(null, toSelect)
+
         if (files.isEmpty()) {
             return
         }
-        assert(files.size == 1)
 
+        check(files.size == 1) { "Expected exactly one file to be selected" }
+        // 加载选中的图片并设置预览
         myPreview.setOverLay(loadImageFile(files[0]), files[0].name)
     }
 

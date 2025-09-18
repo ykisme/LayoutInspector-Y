@@ -43,6 +43,7 @@ import com.google.wireless.android.sdk.stats.AndroidStudioEvent;
 import com.google.wireless.android.sdk.stats.LayoutInspectorEvent;
 import com.intellij.notification.Notification;
 import com.intellij.notification.NotificationGroup;
+import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.Disposable;
 import com.intellij.openapi.actionSystem.DataProvider;
@@ -428,10 +429,17 @@ public class LayoutInspectorContext implements Disposable, DataProvider, ViewNod
     }
 
     public static void createNotification(@NotNull String message, @NotNull NotificationType type) {
-        new Notification(
-                NotificationGroup.createIdWithTitle("Layout Inspector", AndroidBundle.message("android.ddms.actions.layoutinspector.notification.group")),
-                AndroidBundle.message("android.ddms.actions.layoutinspector.notification.title"),
-                message, type).notify(null);
+        // 通过NotificationGroupManager获取已注册的通知组
+        Notification notification = NotificationGroupManager.getInstance()
+                .getNotificationGroup("Layout Inspector Y")
+                .createNotification(
+                        "Layout Inspector Y",
+                        message,
+                        type
+                );
+
+        // 显示通知，null表示在所有项目中显示
+        notification.notify(null);
     }
 
     private class RenderSubtreePreviewActionListener implements ActionListener {

@@ -3,7 +3,7 @@
 
     <name>LayoutInspector-Y</name>
 
-    <vendor email="" >ykk</vendor>
+    <vendor email="">ykk</vendor>
 
     <description><![CDATA[
 This plugin is modified based on the old version of Layout Inspector and includes several convenient features. For system app developers, selecting specific windows to obtain layouts is crucial. However, the new version of AS Layout Inspector lacks this functionality, which is why this plugin is maintained and developed.
@@ -64,7 +64,7 @@ This project is developed based on https://github.com/pingfangx/androidstudiox a
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService
-                            serviceImplementation="yk.plugin.layoutinspector.config.MyPluginSettings"/>
+                serviceImplementation="yk.plugin.layoutinspector.config.MyPluginSettings"/>
         <!-- IMPORTANT: 注册全局配置项入口 -->
         <applicationConfigurable
                 groupId="tools"
@@ -76,5 +76,11 @@ This project is developed based on https://github.com/pingfangx/androidstudiox a
     <depends>org.jetbrains.kotlin</depends>
     <extensions defaultExtensionNs="org.jetbrains.kotlin">
         <supportsKotlinPluginMode supportsK2="true"/> <!-- 关键配置：声明支持K2模式 -->
+    </extensions>
+    <extensions defaultExtensionNs="com.intellij">
+        <!-- 确保id与代码中使用的完全一致 -->
+        <notificationGroup
+                id="Layout Inspector Y"
+                displayType="BALLOON"/>
     </extensions>
 </idea-plugin>
