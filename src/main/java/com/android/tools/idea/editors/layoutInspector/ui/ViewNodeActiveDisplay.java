@@ -18,7 +18,6 @@ package com.android.tools.idea.editors.layoutInspector.ui;
 import com.google.common.annotations.VisibleForTesting;
 import com.android.layoutinspector.model.DisplayInfo;
 import com.android.layoutinspector.model.ViewNode;
-import com.android.tools.idea.ui.MaterialColors;
 import com.android.tools.idea.flagslegacy.StudioFlags;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
@@ -46,8 +45,8 @@ public class ViewNodeActiveDisplay extends JComponent {
   static final float DEFAULT_OVERLAY_ALPHA = 0.5f;
 
   private static final Color DEFAULT_COLOR = Color.GRAY;
-  private static final Color HOVER_COLOR = MaterialColors.DEEP_ORANGE_900;
-  private static final Color SELECTED_COLOR = MaterialColors.LIGHT_BLUE_800;
+  private static final Color HOVER_COLOR = new Color(0xBF360C);
+  private static final Color SELECTED_COLOR = new Color(0x0277BD);
 
   private static final Stroke DEFAULT_STROKE = new BasicStroke(1);
   private static final Stroke THICK_STROKE = new BasicStroke(2);

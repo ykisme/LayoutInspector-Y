@@ -16,21 +16,15 @@
 package com.android.tools.idea.editors.layoutInspector;
 
 import com.android.annotations.NonNull;
-import com.android.layoutinspector.LayoutInspectorCaptureOptions;
-import com.android.layoutinspector.ProtocolVersion;
-import com.google.common.annotations.VisibleForTesting;
 import com.android.ddmlib.AndroidDebugBridge;
 import com.android.ddmlib.Client;
 import com.android.ddmlib.IDevice;
+import com.android.layoutinspector.LayoutInspectorCaptureOptions;
+import com.android.layoutinspector.ProtocolVersion;
 import com.android.layoutinspector.model.ClientWindow;
 import com.android.layoutinspector.model.LayoutFileData;
 import com.android.layoutinspector.model.ViewNode;
 import com.android.layoutinspector.model.ViewProperty;
-import com.android.tools.property.ptablelegacy.PTable;
-import com.android.tools.property.ptablelegacy.PTableItem;
-import com.android.tools.property.ptablelegacy.PTableModel;
-import com.android.tools.adtui.workbench.ToolWindowDefinition;
-import com.android.tools.analytics.UsageTracker;
 import com.android.tools.idea.editors.layoutInspector.ptablelegacy.LITTableCellEditorProvider;
 import com.android.tools.idea.editors.layoutInspector.ptablelegacy.LITableGroupItem;
 import com.android.tools.idea.editors.layoutInspector.ptablelegacy.LITableRendererProvider;
@@ -39,10 +33,11 @@ import com.android.tools.idea.editors.layoutInspector.ui.ViewNodeActiveDisplay;
 import com.android.tools.idea.editors.layoutInspector.ui.ViewNodeTreeRenderer;
 import com.android.tools.idea.flagslegacy.StudioFlags;
 import com.android.tools.idea.observable.collections.ObservableList;
-import com.google.wireless.android.sdk.stats.AndroidStudioEvent;
-import com.google.wireless.android.sdk.stats.LayoutInspectorEvent;
+import com.android.tools.property.ptablelegacy.PTable;
+import com.android.tools.property.ptablelegacy.PTableItem;
+import com.android.tools.property.ptablelegacy.PTableModel;
+import com.google.common.annotations.VisibleForTesting;
 import com.intellij.notification.Notification;
-import com.intellij.notification.NotificationGroup;
 import com.intellij.notification.NotificationGroupManager;
 import com.intellij.notification.NotificationType;
 import com.intellij.openapi.Disposable;
@@ -55,6 +50,7 @@ import com.intellij.openapi.util.Disposer;
 import com.intellij.openapi.util.Key;
 import com.intellij.ui.SpeedSearchComparator;
 import com.intellij.ui.TableSpeedSearch;
+import com.intellij.util.ui.JBUI;
 import org.jetbrains.android.sdk.AndroidSdkUtils;
 import org.jetbrains.android.util.AndroidBundle;
 import org.jetbrains.annotations.NonNls;
@@ -142,7 +138,7 @@ public class LayoutInspectorContext implements Disposable, DataProvider, ViewNod
 
         myTableModel = new PTableModel();
         myPropertiesTable = new PTable(myTableModel);
-        myPropertiesTable.getColumnModel().getColumn(0).setMinWidth((int) (ToolWindowDefinition.DEFAULT_SIDE_WIDTH * 0.6));
+        myPropertiesTable.getColumnModel().getColumn(0).setMinWidth((int) (JBUI.scale(225) * 0.6));
         myPropertiesTable.setRendererProvider(LITableRendererProvider.getInstance());
         if (StudioFlags.LAYOUT_INSPECTOR_EDITING_ENABLED.get()) {
             myPropertiesTable.setEditorProvider(LITTableCellEditorProvider.INSTANCE);
@@ -419,12 +415,6 @@ public class LayoutInspectorContext implements Disposable, DataProvider, ViewNod
             // TODO figure out better way to output, for now it outputs to logcat
             createNotification(AndroidBundle.message("android.ddms.actions.layoutinspector.dumpdisplay.notification.success"),
                     NotificationType.INFORMATION);
-
-            UsageTracker.log(AndroidStudioEvent.newBuilder().setKind(AndroidStudioEvent.EventKind.LAYOUT_INSPECTOR_EVENT)
-                    .setLayoutInspectorEvent(LayoutInspectorEvent.newBuilder()
-                            .setType(
-                                    LayoutInspectorEvent.LayoutInspectorEventType.DUMP_DISPLAYLIST)
-                    ));
         }
     }
 
@@ -466,12 +456,6 @@ public class LayoutInspectorContext implements Disposable, DataProvider, ViewNod
 
     @VisibleForTesting
     public void showSubView(@NotNull ViewNode node) {
-        UsageTracker.log(AndroidStudioEvent.newBuilder().setKind(AndroidStudioEvent.EventKind.LAYOUT_INSPECTOR_EVENT)
-                .setLayoutInspectorEvent(LayoutInspectorEvent.newBuilder()
-                        .setType(
-                                LayoutInspectorEvent.LayoutInspectorEventType.RENDER_SUB_VIEW)
-                ));
-
         ViewNode root = getRoot();
         updatePreview(node);
         mySubviewList.add(root);

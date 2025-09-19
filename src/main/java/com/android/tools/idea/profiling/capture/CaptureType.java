@@ -48,6 +48,4 @@ public abstract class CaptureType {
   public boolean accept(@NotNull VirtualFile file) {
     return true;
   }
-
-  public abstract ProfilerCaptureType getCaptureType();
 }

@@ -15,10 +15,7 @@
  */
 package com.android.tools.idea.editors.layoutInspector.actions
 
-import com.android.tools.analytics.UsageTracker
 import com.android.tools.idea.editors.layoutInspector.ui.ViewNodeActiveDisplay
-import com.google.wireless.android.sdk.stats.AndroidStudioEvent
-import com.google.wireless.android.sdk.stats.LayoutInspectorEvent
 import com.intellij.openapi.actionSystem.ActionToolbar
 import com.intellij.openapi.actionSystem.AnAction
 import com.intellij.openapi.actionSystem.AnActionEvent
@@ -28,12 +25,10 @@ import com.intellij.openapi.actionSystem.impl.ActionButtonWithText
 import com.intellij.openapi.diagnostic.Logger
 import com.intellij.openapi.fileChooser.FileChooserDescriptor
 import com.intellij.openapi.fileChooser.FileChooserFactory
-import com.intellij.openapi.fileChooser.FileTypeDescriptor
 import com.intellij.openapi.ui.Messages
 import com.intellij.openapi.vfs.LocalFileSystem
 import com.intellij.openapi.vfs.VirtualFile
 import java.awt.Image
-import java.io.FileFilter
 import java.io.IOException
 import javax.imageio.ImageIO
 import javax.swing.Icon
@@ -91,14 +86,6 @@ class LoadOverlayAction(private val myPreview: ViewNodeActiveDisplay) :
         if (myPreview.hasOverlay()) {
             myPreview.setOverLay(null, null)
         } else {
-            UsageTracker.log(
-                AndroidStudioEvent.newBuilder().setKind(AndroidStudioEvent.EventKind.LAYOUT_INSPECTOR_EVENT)
-                    .setLayoutInspectorEvent(
-                        LayoutInspectorEvent.newBuilder()
-                            .setType(LayoutInspectorEvent.LayoutInspectorEventType.OVERLAY_IMAGE)
-                    )
-            )
-
             loadOverlay(e)
         }
     }

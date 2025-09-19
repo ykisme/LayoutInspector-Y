@@ -15,11 +15,6 @@
  */
 package com.android.tools.idea.profiling.capture;
 
-import com.android.tools.analytics.UsageTracker;
-import com.android.tools.analytics.UsageTrackerUtils;
-import com.google.wireless.android.sdk.stats.AndroidStudioEvent;
-import com.google.wireless.android.sdk.stats.AndroidStudioEvent.EventCategory;
-import com.google.wireless.android.sdk.stats.AndroidStudioEvent.EventKind;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorPolicy;
 import com.intellij.openapi.fileEditor.FileEditorProvider;
@@ -45,13 +40,6 @@ public class CaptureEditorProvider implements FileEditorProvider, DumbAware {
     if (type == null) {
       throw new IllegalStateException("Type has been removed between accept and createEditor");
     }
-
-    UsageTracker.log(UsageTrackerUtils.withProjectId(
-      AndroidStudioEvent.newBuilder()
-        .setCategory(EventCategory.PROFILING)
-        .setKind(EventKind.PROFILING_OPEN)
-        .setProfilerCaptureType(type.getCaptureType()),
-      project));
 
     return type.createEditor(project, file);
   }

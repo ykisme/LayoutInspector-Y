@@ -15,7 +15,6 @@
  */
 package com.android.tools.idea.profiling.capture;
 
-import com.android.utils.SdkUtils;
 import com.intellij.openapi.vfs.VirtualFile;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,8 +54,12 @@ public abstract class FileCaptureType extends CaptureType {
     return isValidCapture(file.getPath());
   }
 
+    public static boolean endsWithIgnoreCase(String string, String suffix) {
+        return string.regionMatches(true, string.length() - suffix.length(), suffix, 0, suffix.length());
+    }
+
   public boolean isValidCapture(@NotNull String filePath) {
-    return SdkUtils.endsWithIgnoreCase(filePath, myFileNameExtension);
+    return endsWithIgnoreCase(filePath, myFileNameExtension);
   }
 
   @NotNull

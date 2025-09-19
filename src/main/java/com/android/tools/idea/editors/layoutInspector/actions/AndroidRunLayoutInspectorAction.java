@@ -31,12 +31,13 @@ import org.jetbrains.android.util.AndroidBundle;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import yk.plugin.layoutinspector.config.Constant;
+import yk.plugin.layoutinspector.res.Icons;
 
 public class AndroidRunLayoutInspectorAction extends AnAction {
     public AndroidRunLayoutInspectorAction() {
         super(Constant.ACTION_LAYOUT_INSPECTOR_TITLE,
                 Constant.ACTION_LAYOUT_INSPECTOR_DES,
-                StudioIcons.Shell.Menu.LAYOUT_INSPECTOR);
+                Icons.getVERSION_V1());
     }
 
     @Override

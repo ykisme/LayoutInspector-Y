@@ -15,17 +15,13 @@
  */
 package com.android.tools.idea.profiling.capture;
 
-import com.android.ddmlib.ClientData;
-import com.android.tools.analytics.UsageTrackerUtils;
-import com.google.common.annotations.VisibleForTesting;
 import com.android.ddmlib.Client;
-import com.android.tools.analytics.UsageTracker;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFutureTask;
-import com.google.wireless.android.sdk.stats.AndroidStudioEvent;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.application.WriteAction;
 import com.intellij.openapi.fileEditor.FileEditorManager;
@@ -461,13 +457,6 @@ public class CaptureService {
 
         final CaptureType type = CaptureTypeService.getInstance().getType(clazz);
         assert type != null;
-
-        UsageTracker.log(UsageTrackerUtils.withProjectId(
-                AndroidStudioEvent.newBuilder()
-                        .setCategory(AndroidStudioEvent.EventCategory.PROFILING)
-                        .setKind(AndroidStudioEvent.EventKind.PROFILING_CAPTURE)
-                        .setProfilerCaptureType(type.getCaptureType()),
-                myProject));
 
         File file = ApplicationManager.getApplication().runWriteAction(new ThrowableComputable<File, IOException>() {
             @Override

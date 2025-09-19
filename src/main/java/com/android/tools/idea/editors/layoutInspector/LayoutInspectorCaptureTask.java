@@ -15,20 +15,16 @@
  */
 package com.android.tools.idea.editors.layoutInspector;
 
-import com.android.tools.analytics.UsageTrackerUtils;
-import com.android.tools.idea.profiling.capture.CaptureType;
-import com.google.common.annotations.VisibleForTesting;
 import com.android.ddmlib.Client;
 import com.android.layoutinspector.LayoutInspectorBridge;
 import com.android.layoutinspector.LayoutInspectorCaptureOptions;
 import com.android.layoutinspector.LayoutInspectorResult;
 import com.android.layoutinspector.ProtocolVersion;
 import com.android.layoutinspector.model.ClientWindow;
-import com.android.tools.analytics.UsageTracker;
 import com.android.tools.idea.profiling.capture.Capture;
 import com.android.tools.idea.profiling.capture.CaptureService;
-import com.google.wireless.android.sdk.stats.AndroidStudioEvent;
-import com.google.wireless.android.sdk.stats.LayoutInspectorEvent;
+import com.android.tools.idea.profiling.capture.CaptureType;
+import com.google.common.annotations.VisibleForTesting;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
@@ -41,7 +37,6 @@ import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.util.ui.UIUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import yk.plugin.layoutinspector.config.MyPluginSettings;
 import yk.plugin.layoutinspector.config.PrefVersion;
 
 import java.io.IOException;
@@ -83,29 +78,7 @@ public class LayoutInspectorCaptureTask extends Task.Backgroundable {
         indicator.setText("Capturing View Hierarchy");
         indicator.setIndeterminate(false);
 
-        long startTimeMs = System.currentTimeMillis();
         LayoutInspectorResult result = LayoutInspectorBridge.captureView(myWindow, options);
-        long captureDurationMs = System.currentTimeMillis() - startTimeMs;
-        UsageTracker.log(UsageTrackerUtils.withProjectId(
-                AndroidStudioEvent.newBuilder().setKind(AndroidStudioEvent.EventKind.LAYOUT_INSPECTOR_EVENT)
-                        .setDeviceInfo(UsageTrackerUtils.deviceToDeviceInfo(myClient.getDevice()))
-                        .setLayoutInspectorEvent(LayoutInspectorEvent.newBuilder()
-                                .setType(LayoutInspectorEvent.LayoutInspectorEventType.CAPTURE)
-                                .setDurationInMs(captureDurationMs)
-                                .setDataSize(result.getError().isEmpty() ? result.getData().length : 0)),
-                myProject));
-
-        UsageTracker.log(UsageTrackerUtils.withProjectId(
-                AndroidStudioEvent.newBuilder().setKind(AndroidStudioEvent.EventKind.LAYOUT_INSPECTOR_EVENT)
-                        .setDeviceInfo(UsageTrackerUtils.deviceToDeviceInfo(myClient.getDevice()))
-                        .setLayoutInspectorEvent(LayoutInspectorEvent.newBuilder()
-                                .setType(LayoutInspectorEvent.LayoutInspectorEventType.CAPTURE)
-                                .setDurationInMs(captureDurationMs)
-                                .setVersion(version.ordinal() + 1)
-                                .setDataSize(result.getError().isEmpty()
-                                        ? result.getData().length
-                                        : 0)),
-                myProject));
 
         if (!result.getError().isEmpty()) {
             myError = result.getError();

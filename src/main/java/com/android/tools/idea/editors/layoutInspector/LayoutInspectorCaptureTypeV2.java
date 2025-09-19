@@ -16,18 +16,17 @@
 package com.android.tools.idea.editors.layoutInspector;
 
 import com.android.tools.idea.profiling.capture.FileCaptureType;
-import com.google.wireless.android.sdk.stats.AndroidStudioEvent.ProfilerCaptureType;
 import com.intellij.openapi.fileEditor.FileEditor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VirtualFile;
-import icons.StudioIcons;
 import org.jetbrains.annotations.NotNull;
+import yk.plugin.layoutinspector.res.Icons;
 
 public class LayoutInspectorCaptureTypeV2 extends FileCaptureType {
     public static final String DOT_EXT_LAYOUT_INSPECTOR = ".liy2";
 
     protected LayoutInspectorCaptureTypeV2() {
-        super("Layout Inspector Snapshot(V2)", StudioIcons.Shell.Menu.LAYOUT_INSPECTOR, DOT_EXT_LAYOUT_INSPECTOR);
+        super("Layout Inspector Snapshot(V2)", Icons.getVERSION_V2(), DOT_EXT_LAYOUT_INSPECTOR);
     }
 
     @Override
@@ -41,8 +40,4 @@ public class LayoutInspectorCaptureTypeV2 extends FileCaptureType {
         return new LayoutInspectorEditor(project, file);
     }
 
-    @Override
-    public ProfilerCaptureType getCaptureType() {
-        return ProfilerCaptureType.HIERARCHY_VIEW;
-    }
 }
