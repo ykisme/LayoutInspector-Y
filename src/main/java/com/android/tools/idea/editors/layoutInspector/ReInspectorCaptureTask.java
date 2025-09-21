@@ -61,7 +61,7 @@ public class ReInspectorCaptureTask extends Task.Backgroundable {
         myClient = client;
         if (client != null) {
             try {
-                List<@NotNull ClientWindow> all = ClientWindow.getAll(client, 5, TimeUnit.SECONDS);
+                List<ClientWindow> all = ClientWindow.getAll(client, 5, TimeUnit.SECONDS);
                 if (all == null || all.isEmpty()) {
                     myError = "not find window";
                     return;

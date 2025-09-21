@@ -98,7 +98,7 @@ public class CaptureService {
     }
 
     public String getSuggestedName(@Nullable Client client, String windowName) {
-        Set<@NotNull FileNameElement> fileNameElements = MyPluginSettings.getInstance().getState().getFileNameElements();
+        Set<FileNameElement> fileNameElements = MyPluginSettings.getInstance().getState().getFileNameElements();
         boolean showProcessName = fileNameElements.contains(FileNameElement.PROCESS);
         boolean showWindowName = fileNameElements.contains(FileNameElement.WINDOW);
         boolean showTime = fileNameElements.contains(FileNameElement.TIME);

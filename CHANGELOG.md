@@ -1,4 +1,8 @@
-## 1.3.4 2025917
+<!-- Keep a Changelog guide -> https://keepachangelog.com -->
+# LayoutInspector-Y Changelog
+## [Unreleased]
+
+## 1.0.2 20250921
 * Supports V1 and V2 versions.
 Tip: V1 is slower but provides more detailed information, while V2 is faster with reduced output.
 * Supports defining output filename format with variables.

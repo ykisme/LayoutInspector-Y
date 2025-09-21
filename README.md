@@ -1,4 +1,11 @@
-# Layout Inspector Y
+# Layout Inspector-Y
+
+<!-- Plugin description -->
+**Layout Inspector-Y** is modified based on the old version of Layout Inspector and includes several convenient features. For system app developers, selecting specific windows to obtain layouts is crucial. However, the new version of AS Layout Inspector lacks this functionality, which is why this plugin is maintained and developed.
+
+[gh:template]: https://docs.github.com/en/repositories/creating-and-managing-repositories/creating-a-repository-from-a-template
+<!-- Plugin description end -->
+
 ## Abstract
 This plugin is modified based on the old version of Layout Inspector and includes several convenient features. For system app developers, selecting specific windows to obtain layouts is crucial. However, the new version of AS Layout Inspector lacks this functionality, which is why this plugin is maintained and developed.
 
