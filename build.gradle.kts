@@ -4,6 +4,24 @@ import org.jetbrains.changelog.markdownToHTML
 import org.jetbrains.intellij.platform.gradle.TestFrameworkType
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+import java.nio.file.Files
+import java.nio.file.Paths
+import java.util.Properties
+
+val localProperties = Properties()
+//加载 local.properties 文件（使用 rootProject.file() 获取根目录文件）
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use { stream ->
+        localProperties.load(stream)
+    }
+}
+
+fun loadStrFromFilePathLocalProperties(key: String): String {
+    val path = localProperties.getOrElse(key) { "" } as String
+    if (path.isBlank()) return ""
+    return Files.readString(Paths.get(path))
+}
 
 plugins {
     id("java") // Java support
@@ -94,17 +112,19 @@ intellijPlatform {
     }
 
     signing {
-        certificateChain = providers.environmentVariable("CERTIFICATE_CHAIN")
-        privateKey = providers.environmentVariable("PRIVATE_KEY")
-        password = providers.environmentVariable("PRIVATE_KEY_PASSWORD")
+        // 定义在local.properties
+        certificateChain = providers.provider { loadStrFromFilePathLocalProperties("CERTIFICATE_CHAIN_PATH") }
+        privateKey = providers.provider { loadStrFromFilePathLocalProperties("PRIVATE_KEY_PATH") }
+        password = providers.provider { loadStrFromFilePathLocalProperties("PRIVATE_KEY_PASSWORD_PATH") }
     }
 
     publishing {
-        token = providers.environmentVariable("PUBLISH_TOKEN")
+        token = providers.provider { loadStrFromFilePathLocalProperties("PUBLISH_TOKEN_PATH") }
         // The pluginVersion is based on the SemVer (https://semver.org) and supports pre-release labels, like 2.1.7-alpha.3
         // Specify pre-release label to publish the plugin in a custom Release Channel automatically. Read more:
         // https://plugins.jetbrains.com/docs/intellij/deployment.html#specifying-a-release-channel
-        channels = providers.gradleProperty("pluginVersion").map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
+        channels = providers.gradleProperty("pluginVersion")
+            .map { listOf(it.substringAfter('-', "").substringBefore('.').ifEmpty { "default" }) }
     }
 
     pluginVerification {
