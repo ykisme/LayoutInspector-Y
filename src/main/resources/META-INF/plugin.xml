@@ -36,10 +36,10 @@ This project is developed based on https://github.com/pingfangx/androidstudiox a
     </actions>
 
     <extensions defaultExtensionNs="com.intellij">
-        <projectService serviceInterface="com.android.tools.idea.editors.layoutInspector.AndroidLayoutInspectorService"
-                        serviceImplementation="com.android.tools.idea.editors.layoutInspector.impl.AndroidLayoutInspectorServiceImpl"/>
-        <projectService serviceImplementation="com.android.tools.idea.profiling.capture.CaptureService"/>
-        <applicationService serviceImplementation="com.android.tools.idea.profiling.capture.CaptureTypeService"/>
+        <projectService serviceInterface="com.android.toolsy.idea.editors.layoutInspector.AndroidLayoutInspectorService"
+                        serviceImplementation="com.android.toolsy.idea.editors.layoutInspector.impl.AndroidLayoutInspectorServiceImpl"/>
+        <projectService serviceImplementation="com.android.toolsy.idea.profiling.capture.CaptureService"/>
+        <applicationService serviceImplementation="com.android.toolsy.idea.profiling.capture.CaptureTypeService"/>
         <fileType name="Layout Inspector(V1)" extensions="liy"
                   implementationClass="yk.plugin.layoutinspector.LegacyLayoutInspectorFileTypeV1"
                   fieldName="INSTANCE"/>
@@ -53,13 +53,13 @@ This project is developed based on https://github.com/pingfangx/androidstudiox a
     </extensions>
     <extensionPoints>
         <extensionPoint qualifiedName="yk.plugin.layoutinspector.captureType"
-                        interface="com.android.tools.idea.profiling.capture.CaptureType"/>
+                        interface="com.android.toolsy.idea.profiling.capture.CaptureType"/>
     </extensionPoints>
     <extensions defaultExtensionNs="yk.plugin.layoutinspector">
-        <captureType implementation="com.android.tools.idea.editors.layoutInspector.LayoutInspectorCaptureTypeV1"/>
+        <captureType implementation="com.android.toolsy.idea.editors.layoutInspector.LayoutInspectorCaptureTypeV1"/>
     </extensions>
     <extensions defaultExtensionNs="yk.plugin.layoutinspector">
-        <captureType implementation="com.android.tools.idea.editors.layoutInspector.LayoutInspectorCaptureTypeV2"/>
+        <captureType implementation="com.android.toolsy.idea.editors.layoutInspector.LayoutInspectorCaptureTypeV2"/>
     </extensions>
 
     <extensions defaultExtensionNs="com.intellij">

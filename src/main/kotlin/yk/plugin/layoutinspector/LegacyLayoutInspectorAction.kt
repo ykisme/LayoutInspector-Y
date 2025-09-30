@@ -1,7 +1,6 @@
 package yk.plugin.layoutinspector
 
-import com.android.tools.idea.editors.layoutInspector.actions.AndroidRunLayoutInspectorAction
-import com.android.tools.idea.gradle.project.sync.ModelCache
+import com.android.toolsy.idea.editors.layoutInspector.actions.AndroidRunLayoutInspectorAction
 import com.intellij.openapi.actionSystem.AnActionEvent
 import yk.plugin.layoutinspector.config.MyPluginSettings
 import yk.plugin.layoutinspector.config.PrefVersion

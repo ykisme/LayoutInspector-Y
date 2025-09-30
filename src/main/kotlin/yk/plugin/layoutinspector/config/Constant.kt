@@ -1,6 +1,8 @@
 package yk.plugin.layoutinspector.config
 
 object Constant {
+    const val CLEAR_CACHE: String = "An error has occurred. Please clear the Settings and re-enter."
+    const val CONFIG_PREF_WINDOW: String = "Get the Default Window Settings of a Process (with the process name and window name separated by a space), e.g.: com.android.systemui NotificationShade"
     const val ACTION_LAYOUT_INSPECTOR_TITLE: String = "Layout Inspector Y"
     const val ACTION_LAYOUT_INSPECTOR_DES: String = "Inspect Layout for the selected window"
     const val PLUGIN_NAME = "LayoutInspector-Y"

@@ -2,6 +2,12 @@
 # LayoutInspector-Y Changelog
 ## [Unreleased]
 
+## 1.0.4 2025-9-30
+### FixBug 
+* Compatibility Issues with Other Plugins
+### Feature
+* Set the Default Selection Window.It supports configuring the default window of a process, facilitating quick access to the layout.
+
 ## 1.0.2 20250921
 * Supports V1 and V2 versions.
 Tip: V1 is slower but provides more detailed information, while V2 is faster with reduced output.

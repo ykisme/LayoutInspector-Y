@@ -1,6 +1,6 @@
 package yk.plugin.layoutinspector
 
-import com.android.tools.idea.editors.layoutInspector.LayoutInspectorEditor
+import com.android.toolsy.idea.editors.layoutInspector.LayoutInspectorEditor
 import com.intellij.openapi.fileEditor.FileEditor
 import com.intellij.openapi.fileEditor.FileEditorPolicy
 import com.intellij.openapi.fileEditor.FileEditorProvider
